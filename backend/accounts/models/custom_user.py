@@ -3,6 +3,10 @@ from django.db import models
 
 
 class CustomUserManager(BaseUserManager):
+    """
+    Менеджер для создание пользователя и админа
+    """
+
     def create_user(self, email, password=None, **extra_fields):
         if not email:
             raise ValueError("Email обязателен")
@@ -20,6 +24,10 @@ class CustomUserManager(BaseUserManager):
 
 
 class CustomUser(AbstractUser):
+    """
+    Модель пользователя
+    """
+
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
