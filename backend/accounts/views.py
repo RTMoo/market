@@ -15,6 +15,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     Использует кастомный сериализатор `CustomTokenObtainPairSerializer`,
     который проверяет учетные данные и выдает пару токенов (access и refresh).
     """
+
     serializer_class = CustomTokenObtainPairSerializer
 
 
@@ -30,6 +31,7 @@ class UserRegistrationAPIView(APIView):
         permission_classes (list): Разрешает доступ всем пользователям.
         serializer_class (UserRegistrationSerializer): Сериализатор для регистрации.
     """
+
     permission_classes = [AllowAny]
     serializer_class = UserRegistrationSerializer
 

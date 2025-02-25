@@ -1,4 +1,3 @@
-from django.contrib.auth import authenticate
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
@@ -6,35 +5,14 @@ from accounts.models import CustomUser
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    """
-    Кастомный сериализатор для получения JWT-токена по email и паролю.
-    """
+    def get_token(self, user):
+        token = super().get_token(user)
 
-    def validate(self, data):
-        """
-        Проверяет введённые email и пароль, аутентифицирует пользователя
-        и выдаёт JWT-токены (access и refresh).
-        """
-        email = data.get("email")
-        password = data.get("password")
+        # Кастомные поля в payload токена
+        token["is_staff"] = user.is_staff
+        token["email"] = user.email
 
-        if not email or not password:
-            raise serializers.ValidationError("Необходимо указать email и пароль")
-
-        user = authenticate(
-            request=self.context.get("request"), email=email, password=password
-        )
-
-        if not user:
-            raise serializers.ValidationError("Неверные email или пароль")
-
-        refresh = self.get_token(user)
-
-        return {
-            "refresh": str(refresh),
-            "access": str(refresh.access_token),
-            "email": user.email,
-        }
+        return token
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
