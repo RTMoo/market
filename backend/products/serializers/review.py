@@ -13,12 +13,7 @@ class ReviewSerializer(ModelSerializer):
             "created_at",
             "updated_at",
         ]
-        read_only_fields = [
-            "id",
-            "user",
-            "created_at",
-            "updated_at"
-        ]
+        read_only_fields = ["id", "user", "created_at", "updated_at"]
 
     def create(self, validated_data):
         """
@@ -33,7 +28,7 @@ class ReviewSerializer(ModelSerializer):
         """
         Запрет на повторные отзывы от одного клиента к одному товару
         """
-        
+
         user = self.context["request"].user
         product = data.get("product")
 

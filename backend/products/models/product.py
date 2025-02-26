@@ -14,14 +14,11 @@ class Product(Model):
         to="accounts.CustomUser",
         on_delete=SET_NULL,
         null=True,
-        related_name="user_products"
+        related_name="user_products",
     )
     title = CharField(max_length=255)
     category = ForeignKey(
-        to="products.Category",
-        on_delete=SET_NULL,
-        null=True,
-        blank=True
+        to="products.Category", on_delete=SET_NULL, null=True, blank=True
     )
     description = CharField(max_length=512)
     price = DecimalField(max_digits=10, decimal_places=2)
