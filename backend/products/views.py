@@ -1,50 +1,51 @@
-from rest_framework.viewsets import ModelViewSet, GenericViewSet
-from products.models import Product, Category
-from products.serializers import ProductSerializer, CategorySerializer
-from rest_framework.permissions import BasePermission, AllowAny
-from rest_framework_simplejwt.tokens import AccessToken
-from rest_framework.mixins import ListModelMixin
+from rest_framework.viewsets import ModelViewSet
+from products.models import Product, Category, Review
+from products.serializers import ProductSerializer, CategorySerializer, ReviewSerializer
+from products.permissions import IsOwnerOrReadOnly, IsAdmin
 
 
-class IsAdminPermission(BasePermission):
+class ProductViewSet(ModelViewSet):
     """
-    Разрешение, которое проверяет, является ли пользователь админом (is_staff=True).
-    """
-
-    def has_permission(self, request, view):
-        access_token = request.auth
-        if not access_token:
-            return False
-
-        token = AccessToken(str(request.auth))
-        return token.get("is_staff", False)
-
-
-class ProductListView(ListModelMixin, GenericViewSet):
-    """
-    ViewSet для чтения списка товаров.
+    ViewSet для управления товароми
 
     - Доступ:
-        - Все пользователи.
-    - queryset: Все объекты модели Product.
-    - serializer_class: ProductSerializer.
+        - Читать могут все
+        - Изменять, удалять могут только владельцы
+    - queryset: все обьекты модели Product
+    - serializer_class = ProductSerializer
     """
 
-    permission_classes = [AllowAny]
+    permission_classes = [IsOwnerOrReadOnly]
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
 
 class CategoryViewSet(ModelViewSet):
     """
-    ViewSet для управления категориями.
+    ViewSet для управления категориями
 
     - Доступ:
-        - Только администраторы могут управлять категориями.
-    - queryset: Все объекты модели Category.
-    - serializer_class: CategorySerializer.
+        - Только администраторы могут управлять категориями
+    - queryset: Все объекты модели Category
+    - serializer_class: CategorySerializer
     """
 
-    permission_classes = [IsAdminPermission]
+    permission_classes = [IsAdmin]
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+
+
+class ReviewViewSet(ModelViewSet):
+    """
+    ViewSet для управления отзывами
+
+    - Доступ:
+        - Читать могут все
+        - Изменять, удалять могут только владельцы
+    - queryset: все обьекты модели Review
+    - serializer_class = ReviewSerializer
+    """
+
+    permission_classes = [IsOwnerOrReadOnly]
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
