@@ -1,5 +1,16 @@
-from django.db import models
+from django.db.models import (
+    Model,
+    CharField,
+    SlugField
+)
 
 
-class Category(models.Model):
-    name = models.CharField(max_length=255)
+class Category(Model):
+    name = CharField(
+        max_length=255,
+        unique=True
+    )
+    slug = SlugField(
+        max_length=255,
+        unique=True
+    )

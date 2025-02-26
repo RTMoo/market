@@ -6,7 +6,6 @@ from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework.mixins import ListModelMixin
 
 
-
 class IsAdminPermission(BasePermission):
     """
     Разрешение, которое проверяет, является ли пользователь админом (is_staff=True).
@@ -25,15 +24,16 @@ class ProductListView(ListModelMixin, GenericViewSet):
     """
     ViewSet для чтения списка товаров.
 
-    - Доступ: 
+    - Доступ:
         - Все пользователи.
     - queryset: Все объекты модели Product.
     - serializer_class: ProductSerializer.
     """
-    
+
     permission_classes = [AllowAny]
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
 
 class CategoryViewSet(ModelViewSet):
     """
