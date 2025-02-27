@@ -5,18 +5,72 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from accounts.serializers import UserRegistrationSerializer
-from .serializers import CustomTokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenRefreshView, TokenBlacklistView
+from accounts.utils import set_jwt_token
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     """
-    Представление для получения JWT-токена.
-
-    Использует кастомный сериализатор `CustomTokenObtainPairSerializer`,
-    который проверяет учетные данные и выдает пару токенов (access и refresh).
+    Хранение токена в HttpOnly
     """
 
-    serializer_class = CustomTokenObtainPairSerializer
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+
+        if response.status_code == status.HTTP_200_OK:
+            access_token = response.data.get("access")
+            refresh_token = response.data.get("refresh")
+
+            if access_token and refresh_token:
+                response = set_jwt_token(
+                    response=response,
+                    access_token=access_token,
+                    refresh_token=refresh_token,
+                )
+                print(response)
+                # Удаляем токены из тела ответа
+                del response.data["access"]
+                del response.data["refresh"]
+
+        return response
+
+
+class CustomTokenRefreshView(TokenRefreshView):
+    """
+    Обновление access токена
+    """
+
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+
+        if response.status_code == status.HTTP_200_OK:
+            new_access_token = response.data.get("access")
+
+            if new_access_token:
+                response = set_jwt_token(
+                    response=response,
+                    access_token=new_access_token
+                )
+
+                del response.data["access"]
+
+        return response
+
+
+class CustomTokenBlacklistView(TokenBlacklistView):
+    """
+    Удаление куки при выходе из системы
+    """
+
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+
+        if response.status_code == status.HTTP_200_OK:
+            # Удаляем куки с токенами
+            response.delete_cookie("access_token")
+            response.delete_cookie("refresh_token")
+
+        return response
 
 
 class UserRegistrationAPIView(APIView):

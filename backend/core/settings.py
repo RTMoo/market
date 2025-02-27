@@ -131,9 +131,10 @@ AUTH_USER_MODEL = "accounts.CustomUser"
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTStatelessUserAuthentication",
+        "accounts.authentication.CookieJWTAuthentication",
         "rest_framework.authentication.SessionAuthentication",
     ),
+
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
@@ -144,10 +145,14 @@ SPECTACULAR_SETTINGS = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(hours=2),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "USER_ID_FIELD": "id",  # Поле ID в модели пользователя
     "USER_ID_CLAIM": "user_id",  # Какое поле в токене отвечает за ID
+    "AUTH_COOKIE": "access_token",  # Имя cookie для access token
+    "AUTH_COOKIE_SECURE": False,  # True, для Production
+    "AUTH_COOKIE_HTTP_ONLY": True,  # HttpOnly cookie
+    "AUTH_COOKIE_SAMESITE": "Lax",  # SameSite policy
 }
 
 # CORS
