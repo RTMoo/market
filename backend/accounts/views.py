@@ -27,7 +27,6 @@ class CustomTokenObtainPairView(TokenObtainPairView):
                     access_token=access_token,
                     refresh_token=refresh_token,
                 )
-                print(response)
                 # Удаляем токены из тела ответа
                 del response.data["access"]
                 del response.data["refresh"]
