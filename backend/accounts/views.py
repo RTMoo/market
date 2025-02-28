@@ -57,18 +57,26 @@ class CustomTokenRefreshView(TokenRefreshView):
 
 
 class CustomTokenBlacklistView(TokenBlacklistView):
-    """
-    Удаление куки при выходе из системы
-    """
-
     def post(self, request, *args, **kwargs):
+        # Получаем refresh токен из куки (Потому что фронтенд не должен передавать вручную)
+        refresh_token = request.COOKIES.get('refresh_token')
+        
+        if not refresh_token:
+            return Response(
+                {"detail": "Refresh token is missing"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Добавляем refresh-токен в данные запроса
+        request.data.update({"refresh": refresh_token})
+        
         response = super().post(request, *args, **kwargs)
-
+        
         if response.status_code == status.HTTP_200_OK:
             # Удаляем куки с токенами
             response.delete_cookie("access_token")
             response.delete_cookie("refresh_token")
-
+        
         return response
 
 
