@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     "accounts",
     "products",
     "profiles",
-    "phonenumber_field"
+    "phonenumber_field",
 ]
 
 MIDDLEWARE = [
