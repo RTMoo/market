@@ -2,10 +2,19 @@ from rest_framework.serializers import ModelSerializer
 from products.models import Product
 from accounts.models import CustomUser
 
+
 class ProductSerializer(ModelSerializer):
     class Meta:
         model = Product
-        fields = ["id", "title", "description", "category", "created_at", "price", "stock"]
+        fields = [
+            "id",
+            "title",
+            "description",
+            "category",
+            "created_at",
+            "price",
+            "stock",
+        ]
         read_only_fields = ["id", "created_at"]
 
     def create(self, validated_data):
