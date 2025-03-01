@@ -36,7 +36,7 @@ const Header = ({ toggleSidebar }) => {
     }, []);
 
     return (
-        <header className="sticky top-0 left-0 w-full h-16 bg-white shadow-md px-6 z-50">
+        <header className="sticky top-0 left-0 w-full h-16 bg-white shadow-md px-6 z-100">
             <div className="flex justify-between items-center h-full">
                 <div className="flex flex-row items-center">
                     <button className="p-2 rounded-md hover:bg-gray-200 transition" onClick={toggleSidebar}>
@@ -55,13 +55,14 @@ const Header = ({ toggleSidebar }) => {
                             </button>
 
                             {menuOpen && (
-                                <div ref={menuRef} className="absolute right-0 top-14 w-36 bg-white shadow-lg rounded-lg py-2 z-50">
+                                <div ref={menuRef} className="absolute border right-0 top-14 w-36 bg-white shadow-lg rounded-lg py-2 z-5">
                                     <button
                                         onClick={() => navigate("/profile")}
                                         className="block w-full text-left px-4 py-2 hover:bg-gray-100"
                                     >
                                         Профиль
                                     </button>
+                                    <hr />
                                     <button
                                         onClick={handleLogout}
                                         className="block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100"
