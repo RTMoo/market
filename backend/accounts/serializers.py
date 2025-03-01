@@ -2,6 +2,7 @@ from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from accounts.models import CustomUser
+from profiles.models import Profile
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -56,4 +57,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         """
         validated_data.pop("password2")
         user = CustomUser.objects.create_user(**validated_data)
+        profile = Profile.objects.create(user=user)
+        print(profile.first_name)
         return user
