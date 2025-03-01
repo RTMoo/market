@@ -7,11 +7,12 @@ const LoginPage = () => {
     let [email, setEmail] = useState('')
     let [password, setPassword] = useState('')
 
-    const log = async (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
         try {
             await login(email, password);
-            localStorage.setItem('email', email);
+            localStorage.setItem("email", email);
+            setEmail(email);
             navigate('/');
         } catch (error) {
             console.log(error);
@@ -47,7 +48,7 @@ const LoginPage = () => {
                 <button
                     type="submit"
                     className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-200"
-                    onClick={log}
+                    onClick={handleLogin}
                 >
                     Вход
                 </button>

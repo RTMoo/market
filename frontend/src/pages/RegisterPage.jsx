@@ -8,7 +8,7 @@ const RegisterPage = () => {
     let [password, setPassword] = useState('')
     let [password2, setPassword2] = useState('')
 
-    const reg = async (e) => {
+    const handleRegister = async (e) => {
         e.preventDefault();
         try {
             await register(email, password, password2)
@@ -56,7 +56,7 @@ const RegisterPage = () => {
                 <button
                     type="submit"
                     className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-200"
-                    onClick={reg}
+                    onClick={handleRegister}
                 >
                     Регистрация
                 </button>

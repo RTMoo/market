@@ -8,14 +8,14 @@ const Header = ({ toggleSidebar }) => {
     const [userEmail, setUserEmail] = useState(null);
 
     useEffect(() => {
-        setUserEmail(localStorage.getItem('email')); // Получаем email из localStorage
+        setUserEmail(localStorage.getItem('email'))
     }, []);
 
-    const lgt = async () => {
+    const handleLogout = async () => {
         try {
             await logout()
-            localStorage.removeItem('email');
-            setUserEmail(null);
+            localStorage.removeItem('email')
+            setUserEmail(null)
             navigate('/')
         } catch (error) {
             console.log(error)
@@ -25,7 +25,7 @@ const Header = ({ toggleSidebar }) => {
     return (
         <header className="sticky top-0 left-0 w-full h-16 bg-white shadow-md px-6 z-100">
             <div className="flex justify-between items-center h-full">
-                <div className="flex flex-row align-center">
+                <div className="flex flex-row items-center">
                     <button className="p-2 rounded-md hover:bg-gray-200 transition" onClick={toggleSidebar}>
                         <VscThreeBars size={30} />
                     </button>
@@ -41,7 +41,7 @@ const Header = ({ toggleSidebar }) => {
                         <div className="flex items-center gap-4">
                             <span className="text-gray-700">{userEmail}</span>
                             <button 
-                                onClick={lgt} 
+                                onClick={handleLogout} 
                                 className="bg-red-500 text-white px-4 py-1 rounded-lg hover:bg-red-600 transition"
                             >
                                 Выйти
