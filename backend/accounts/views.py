@@ -40,6 +40,16 @@ class CustomTokenRefreshView(TokenRefreshView):
     """
 
     def post(self, request, *args, **kwargs):
+        refresh_token = request.COOKIES.get("refresh_token")
+
+        if not refresh_token:
+            return Response(
+                {"detail": "Refresh token is missing"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        request.data["refresh"] = refresh_token
+
         response = super().post(request, *args, **kwargs)
 
         if response.status_code == status.HTTP_200_OK:
@@ -56,6 +66,10 @@ class CustomTokenRefreshView(TokenRefreshView):
 
 
 class CustomTokenBlacklistView(TokenBlacklistView):
+    """
+    Выход из системы и очистка куков
+    """
+
     def post(self, request, *args, **kwargs):
         # Получаем refresh токен из куки (Потому что фронтенд не должен передавать вручную)
         refresh_token = request.COOKIES.get("refresh_token")
