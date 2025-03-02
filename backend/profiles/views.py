@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from django.db.utils import IntegrityError
-
+from phonenumbers import parse, is_valid_number, NumberParseException
 
 from profiles.serializers import ProfileSerializer
 from profiles.models import Profile
@@ -37,6 +37,15 @@ class ProfileAPIView(APIView):
         """
         Обновить профиль пользователя (только измененные поля)
         """
+        if "phone_number" in request.data:
+            pn = request.data.get("phone_number")
+            try:
+                is_valid_number(parse(pn))
+            except NumberParseException:
+                return Response(
+                    {"message": "Invalid data phone_number"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
 
         try:
             updated_rows = Profile.objects.filter(user=request.user.id).update(
