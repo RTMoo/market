@@ -37,9 +37,8 @@ class ProfileAPIView(APIView):
         """
         Обновить профиль пользователя (только измененные поля)
         """
-        
-        if "phone_number" in request.data:
-            pn = request.data.get("phone_number")
+        pn = request.data.get("phone_number")
+        if len(pn) > 0:
             try:
                 is_valid_number(parse(pn))
             except NumberParseException:
