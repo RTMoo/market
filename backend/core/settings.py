@@ -128,7 +128,7 @@ SPECTACULAR_SETTINGS = {
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
     "USER_ID_FIELD": "id",  # Поле ID в модели пользователя
     "USER_ID_CLAIM": "user_id",  # Какое поле в токене отвечает за ID
     "AUTH_COOKIE": "access_token",  # Имя cookie для access token
