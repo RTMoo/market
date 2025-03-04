@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from products.models import Product, Category, Review
 from products.serializers import ProductSerializer, CategorySerializer, ReviewSerializer
-from products.permissions import IsOwnerOrReadOnly, IsAdmin
+from commons.permissions import IsOwner, IsModerator, IsReader
 
 
 class ProductViewSet(ModelViewSet):
@@ -15,7 +15,7 @@ class ProductViewSet(ModelViewSet):
     - serializer_class = ProductSerializer
     """
 
-    permission_classes = [IsOwnerOrReadOnly]
+    permission_classes = [IsOwner | IsModerator | IsReader]
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
@@ -30,7 +30,7 @@ class CategoryViewSet(ModelViewSet):
     - serializer_class: CategorySerializer
     """
 
-    permission_classes = [IsAdmin]
+    permission_classes = [IsModerator | IsReader]
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
@@ -46,6 +46,6 @@ class ReviewViewSet(ModelViewSet):
     - serializer_class = ReviewSerializer
     """
 
-    permission_classes = [IsOwnerOrReadOnly]
+    permission_classes = [IsModerator | IsReader]
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
