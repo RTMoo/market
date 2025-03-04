@@ -1,29 +1,7 @@
 from rest_framework import serializers
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from accounts.models import CustomUser
 from profiles.models import Profile
-
-
-class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    def get_token(self, user):
-        token = super().get_token(user)
-
-        # Кастомные поля в payload токена
-        token["is_staff"] = user.is_staff
-        token["email"] = user.email
-
-        return token
-
-
-class CustomUserSerializer(serializers.ModelSerializer):
-    """
-    Сериализатор для модели CustomUser.
-    """
-
-    class Meta:
-        model = CustomUser
-        fields = ["id", "email"]
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -57,6 +35,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         """
         validated_data.pop("password2")
         user = CustomUser.objects.create_user(**validated_data)
-        profile = Profile.objects.create(user=user)
-        print(profile.first_name)
+        Profile.objects.create(user=user)
+        
         return user
