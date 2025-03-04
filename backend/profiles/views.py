@@ -37,6 +37,7 @@ class ProfileAPIView(APIView):
         """
         Обновить профиль пользователя (только измененные поля)
         """
+        
         if "phone_number" in request.data:
             pn = request.data.get("phone_number")
             try:
