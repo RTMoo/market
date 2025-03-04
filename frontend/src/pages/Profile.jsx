@@ -16,7 +16,7 @@ const Profile = () => {
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                const data = await getProfile();
+                const data = (await getProfile()).data;
                 setProfile(data);
                 setFormData({
                     first_name: data.first_name || "",
@@ -71,7 +71,7 @@ const Profile = () => {
             <div className="w-full bg-white p-6 mt-10 border-gray-200">
                 <h2 className="text-2xl font-semibold text-center mb-4">Профиль</h2>
                 <form onSubmit={handleSubmit} className="space-y-4">
-                    {/* Имя и фамилия */}
+
                     <div className="flex gap-4">
                         <div className="w-1/2">
                             <label className="block text-gray-600">Имя</label>
@@ -95,13 +95,12 @@ const Profile = () => {
                         </div>
                     </div>
 
-                    {/* Телефон и Email */}
                     <div className="flex gap-4">
                         <div className="w-1/2">
                             <label className="block text-gray-600">Номер телефона</label>
                             <input
                                 type="text"
-                                name="phone_number" // Исправлено
+                                name="phone_number"
                                 value={formData.phone_number}
                                 onChange={handleChange}
                                 className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
@@ -119,7 +118,6 @@ const Profile = () => {
                         </div>
                     </div>
 
-                    {/* Кнопка */}
                     <div className="flex justify-end">
                         <button
                             type="submit"

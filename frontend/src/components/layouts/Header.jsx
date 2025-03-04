@@ -5,19 +5,14 @@ import { useNavigate } from "react-router-dom";
 
 const Header = ({ toggleSidebar }) => {
     const navigate = useNavigate();
-    const [userEmail, setUserEmail] = useState(null);
     const [menuOpen, setMenuOpen] = useState(false);
     const menuRef = useRef(null);
-
-    useEffect(() => {
-        setUserEmail(localStorage.getItem("email"));
-    }, []);
+    const isAuth = localStorage.getItem('isAuth') || false
 
     const handleLogout = async () => {
         try {
             await logout();
-            localStorage.removeItem("email");
-            setUserEmail(null);
+            localStorage.setItem("isAuth", "false");
             navigate("/");
         } catch (error) {
             console.log(error);
@@ -48,7 +43,7 @@ const Header = ({ toggleSidebar }) => {
                 </div>
 
                 <nav className="relative">
-                    {userEmail ? (
+                    {isAuth === "true" ? (
                         <div className="relative flex items-center">
                             <button onClick={() => setMenuOpen(!menuOpen)} className="p-2 rounded-full hover:bg-gray-200 transition">
                                 <VscAccount size={30} />

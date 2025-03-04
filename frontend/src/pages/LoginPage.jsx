@@ -10,15 +10,19 @@ const LoginPage = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            await login(email, password);
-            localStorage.setItem("email", email);
-            setEmail(email);
-            navigate('/');
+            const response = await login(email, password);
+            
+            if (response.status === 200) {
+                localStorage.setItem("isAuth", "true");
+                navigate('/');
+            } else {
+                console.log("Ошибка входа: неверный статус ответа");
+            }
         } catch (error) {
-            console.log(error);
+            console.log("Ошибка входа:", error);
         }
     };
-    
+
 
     return (
         <div className="w-full min-h-screen flex items-center justify-center bg-gray-100">

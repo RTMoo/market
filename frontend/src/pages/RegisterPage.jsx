@@ -11,10 +11,12 @@ const RegisterPage = () => {
     const handleRegister = async (e) => {
         e.preventDefault();
         try {
-            await register(email, password, password2)
-            navigate('/login')
+            const response = await register(email, password, password2);
+            if (response.status === 200) {
+                navigate('/login');
+            };
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
     };
 
