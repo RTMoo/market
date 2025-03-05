@@ -2,7 +2,7 @@ from rest_framework.viewsets import ModelViewSet
 from products.models import Product, Category, Review
 from products.serializers import ProductSerializer, CategorySerializer, ReviewSerializer
 from commons.permissions import IsOwner, IsModerator, IsReader
-
+from commons.paginations import CustomPagination
 
 class ProductViewSet(ModelViewSet):
     """
@@ -18,7 +18,8 @@ class ProductViewSet(ModelViewSet):
     permission_classes = [IsOwner | IsModerator | IsReader]
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-
+    pagination_class = CustomPagination
+    
 
 class CategoryViewSet(ModelViewSet):
     """
