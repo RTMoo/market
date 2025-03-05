@@ -12,7 +12,7 @@ const Layout = ({ children }) => {
     };
   
     return (
-      <div className="flex flex-col min-h-screen">
+      <div className="flex flex-col">
         <Header toggleSidebar={toggleSidebar} />
         <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
         <Main>{children}</Main>

@@ -2,7 +2,7 @@ import React from 'react';
 
 const Main = ({ children }) => {
     return (
-        <main className='h-screen w-full justify-center flex'>
+        <main className='w-full justify-center min-h-screen'>
             {children}
         </main>
     );
