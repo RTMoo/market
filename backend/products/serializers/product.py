@@ -8,6 +8,7 @@ class ProductSerializer(ModelSerializer):
         model = Product
         fields = [
             "id",
+            "user",
             "title",
             "description",
             "category",
@@ -15,7 +16,7 @@ class ProductSerializer(ModelSerializer):
             "price",
             "stock",
         ]
-        read_only_fields = ["id", "created_at"]
+        read_only_fields = ["id", "created_at", "user"]
 
     def create(self, validated_data):
         """

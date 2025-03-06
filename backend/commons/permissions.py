@@ -1,4 +1,4 @@
-from rest_framework.permissions import BasePermission, SAFE_METHODS
+from rest_framework.permissions import BasePermission, SAFE_METHODS, IsAuthenticated
 from accounts.models import CustomUser
 
 
@@ -23,3 +23,6 @@ class IsOwner(BasePermission):
 
     def has_object_permission(self, request, view, obj):
         return obj.user_id == request.user.id
+
+
+__all__ = [IsReader, IsModerator, IsOwner, IsAuthenticated]
