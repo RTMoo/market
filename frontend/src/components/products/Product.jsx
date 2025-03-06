@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getProducts } from "../../../api/product";
+import { getProducts } from "../../api/product";
 import Paginator from "./Paginator";
 import ProductCard from "./ProductCard";
 
