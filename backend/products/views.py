@@ -1,34 +1,50 @@
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, GenericViewSet, mixins
 from products.models import Product, Category, Review
 from products.serializers import ProductSerializer, CategorySerializer, ReviewSerializer
-from commons.permissions import IsOwner, IsModerator, IsReader
+from commons.permissions import IsOwner, IsModerator, IsReader, IsAuthenticated
 from commons.paginations import CustomPagination
+
 
 class ProductViewSet(ModelViewSet):
     """
-    ViewSet для управления товароми
+    Управление товарами.
 
-    - Доступ:
-        - Читать могут все
-        - Изменять, удалять могут только владельцы
-    - queryset: все обьекты модели Product
-    - serializer_class = ProductSerializer
+    Доступ:
+    - Просмотр — для всех.
+    - Изменение и удаление — только владельцы.
+
+    Используется пагинация.
     """
 
     permission_classes = [IsReader | IsOwner | IsModerator]
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     pagination_class = CustomPagination
-    
+
+
+class UserProductViewSet(mixins.ListModelMixin, GenericViewSet):
+    """
+    Товары текущего пользователя.
+
+    Доступ:
+    - Только для аутентифицированных пользователей.
+
+    """
+
+    serializer_class = ProductSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Product.objects.filter(user=self.request.user.id)
+
 
 class CategoryViewSet(ModelViewSet):
     """
-    ViewSet для управления категориями
+    Управление категориями.
 
-    - Доступ:
-        - Только администраторы могут управлять категориями
-    - queryset: Все объекты модели Category
-    - serializer_class: CategorySerializer
+    Доступ:
+    - Просмотр — для всех.
+    - Изменение и удаление — только модератор.
     """
 
     permission_classes = [IsReader | IsModerator]
@@ -38,15 +54,13 @@ class CategoryViewSet(ModelViewSet):
 
 class ReviewViewSet(ModelViewSet):
     """
-    ViewSet для управления отзывами
+    Управление отзывами.
 
-    - Доступ:
-        - Читать могут все
-        - Изменять, удалять могут только владельцы
-    - queryset: все обьекты модели Review
-    - serializer_class = ReviewSerializer
+    Доступ:
+    - Просмотр — для всех.
+    - Изменение и удаление — только владельцы или модератор.
     """
 
-    permission_classes = [IsReader | IsModerator]
+    permission_classes = [IsReader | IsOwner | IsModerator]
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
