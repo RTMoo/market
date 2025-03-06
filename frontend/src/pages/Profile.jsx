@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getProfile, updateProfile } from "../api/profile";
+import FormInput from "../components/commons/FormInput";
 
 const Profile = () => {
     const [profile, setProfile] = useState(null);
@@ -73,49 +74,13 @@ const Profile = () => {
                 <form onSubmit={handleSubmit} className="space-y-4">
 
                     <div className="flex gap-4">
-                        <div className="w-1/2">
-                            <label className="block text-gray-600">Имя</label>
-                            <input
-                                type="text"
-                                name="first_name"
-                                value={formData.first_name}
-                                onChange={handleChange}
-                                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                            />
-                        </div>
-                        <div className="w-1/2">
-                            <label className="block text-gray-600">Фамилия</label>
-                            <input
-                                type="text"
-                                name="last_name"
-                                value={formData.last_name}
-                                onChange={handleChange}
-                                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                            />
-                        </div>
+                        <FormInput label={'Имя'} type={'text'} name={'first_name'} value={formData.first_name} onChange={handleChange} />
+                        <FormInput label={'Фамилия'} type={'text'} name={'last_name'} value={formData.last_name} onChange={handleChange} />
                     </div>
 
                     <div className="flex gap-4">
-                        <div className="w-1/2">
-                            <label className="block text-gray-600">Номер телефона</label>
-                            <input
-                                type="text"
-                                name="phone_number"
-                                value={formData.phone_number}
-                                onChange={handleChange}
-                                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                            />
-                        </div>
-                        <div className="w-1/2">
-                            <label className="block text-gray-600">Email</label>
-                            <input
-                                type="email"
-                                name="email"
-                                value={formData.email}
-                                disabled
-                                className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-500"
-                            />
-                        </div>
+                        <FormInput label={'Номер'} type={'text'} name={'phone_number'} value={formData.phone_number} onChange={handleChange} />
+                        <FormInput label={'Почта'} type={'text'} value={formData.email} disabled={true}/>
                     </div>
 
                     <div className="flex justify-end">
