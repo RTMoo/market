@@ -15,7 +15,7 @@ class ProductViewSet(ModelViewSet):
     - serializer_class = ProductSerializer
     """
 
-    permission_classes = [IsOwner | IsModerator | IsReader]
+    permission_classes = [IsReader | IsOwner | IsModerator]
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     pagination_class = CustomPagination
@@ -31,7 +31,7 @@ class CategoryViewSet(ModelViewSet):
     - serializer_class: CategorySerializer
     """
 
-    permission_classes = [IsModerator | IsReader]
+    permission_classes = [IsReader | IsModerator]
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
@@ -47,6 +47,6 @@ class ReviewViewSet(ModelViewSet):
     - serializer_class = ReviewSerializer
     """
 
-    permission_classes = [IsModerator | IsReader]
+    permission_classes = [IsReader | IsModerator]
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
