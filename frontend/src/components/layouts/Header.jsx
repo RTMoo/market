@@ -50,12 +50,19 @@ const Header = ({ toggleSidebar }) => {
                             </button>
 
                             {menuOpen && (
-                                <div ref={menuRef} className="absolute border right-0 top-14 w-36 bg-white shadow-lg rounded-lg py-2 z-5">
+                                <div ref={menuRef} className="absolute border right-0 top-14 w-36 bg-white shadow-lg rounded-lg z-5">
                                     <button
                                         onClick={() => navigate("/profile")}
                                         className="block w-full text-left px-4 py-2 hover:bg-gray-100"
                                     >
                                         Профиль
+                                    </button>
+                                    <hr />
+                                    <button
+                                        onClick={() => navigate("/create-product")}
+                                        className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                                    >
+                                        Создать
                                     </button>
                                     <hr />
                                     <button
