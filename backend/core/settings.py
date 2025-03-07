@@ -144,3 +144,7 @@ CORS_ALLOW_METHODS = ["GET", "POST", "PATCH", "DELETE"]
 CORS_ALLOW_HEADERS = ["Authorization", "Content-Type"]
 CORS_MAX_AGE = 600  # Кэшировать preflight на 10 минут
 CORS_ALLOW_CREDENTIALS = True  # Разрешает передавать куки и токены
+
+# Только для локального
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"

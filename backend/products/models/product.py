@@ -6,6 +6,7 @@ from django.db.models import (
     DateTimeField,
     DecimalField,
     SET_NULL,
+    ImageField,
 )
 
 
@@ -24,3 +25,4 @@ class Product(Model):
     price = DecimalField(max_digits=10, decimal_places=2)
     stock = PositiveIntegerField(default=0)
     created_at = DateTimeField(auto_now_add=True)
+    image = ImageField(upload_to="products/", null=True, blank=True)
