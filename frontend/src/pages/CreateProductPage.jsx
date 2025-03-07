@@ -10,8 +10,8 @@ const CreateProductPage = () => {
         title: "",
         description: "",
         category: "",
-        price: 0,
-        stock: 0,
+        price: "",
+        stock: "",
     });
 
     const fetchCategory = async () => {
