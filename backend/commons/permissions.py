@@ -1,12 +1,5 @@
-from rest_framework.permissions import BasePermission, SAFE_METHODS, IsAuthenticated
+from rest_framework.permissions import BasePermission
 from accounts.models import CustomUser
-
-
-class IsReader(BasePermission):
-    """Разрешает только чтение (GET, HEAD, OPTIONS)"""
-
-    def has_permission(self, request, view):
-        return request.method in SAFE_METHODS
 
 
 class IsModerator(BasePermission):
@@ -25,4 +18,4 @@ class IsOwner(BasePermission):
         return obj.user_id == request.user.id
 
 
-__all__ = [IsReader, IsModerator, IsOwner, IsAuthenticated]
+__all__ = [IsModerator, IsOwner]

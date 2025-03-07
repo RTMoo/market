@@ -1,7 +1,8 @@
 from rest_framework.viewsets import ModelViewSet, GenericViewSet, mixins
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from products.models import Product, Category, Review
 from products.serializers import ProductSerializer, CategorySerializer, ReviewSerializer
-from commons.permissions import IsOwner, IsModerator, IsReader, IsAuthenticated
+from commons.permissions import IsOwner, IsModerator
 from commons.paginations import CustomPagination
 
 
@@ -11,15 +12,21 @@ class ProductViewSet(ModelViewSet):
 
     Доступ:
     - Просмотр — для всех.
-    - Изменение и удаление — только владельцы.
-
-    Используется пагинация.
+    - Создание - только для аутентифицированных пользователей.
+    - Изменение и удаление — только владельцы или модераторы.
     """
 
-    permission_classes = [IsReader | IsOwner | IsModerator]
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     pagination_class = CustomPagination
+
+    def get_permissions(self):
+        if self.action in ["list", "retrieve"]:
+            return [AllowAny()]
+        if self.action in ["create"]:
+            return [IsAuthenticated()]
+
+        return [IsOwner() | IsModerator()]
 
 
 class UserProductViewSet(mixins.ListModelMixin, GenericViewSet):
@@ -28,11 +35,12 @@ class UserProductViewSet(mixins.ListModelMixin, GenericViewSet):
 
     Доступ:
     - Только для аутентифицированных пользователей.
-
     """
 
     serializer_class = ProductSerializer
-    permission_classes = [IsAuthenticated]
+
+    def get_permissions(self):
+        return [IsAuthenticated()]
 
     def get_queryset(self):
         return Product.objects.filter(user=self.request.user.id)
@@ -44,12 +52,16 @@ class CategoryViewSet(ModelViewSet):
 
     Доступ:
     - Просмотр — для всех.
-    - Изменение и удаление — только модератор.
+    - Создание, изменение и удаление — только модератор.
     """
 
-    permission_classes = [IsReader | IsModerator]
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+
+    def get_permissions(self):
+        if self.action in ["list", "retrieve"]:
+            return [AllowAny()]
+        return [IsModerator()]
 
 
 class ReviewViewSet(ModelViewSet):
@@ -58,9 +70,17 @@ class ReviewViewSet(ModelViewSet):
 
     Доступ:
     - Просмотр — для всех.
+    - Создание - только для аутентифицированных пользователей.
     - Изменение и удаление — только владельцы или модератор.
     """
 
-    permission_classes = [IsReader | IsOwner | IsModerator]
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+
+    def get_permissions(self):
+        if self.action in ["list", "retrieve"]:
+            return [AllowAny()]
+        if self.action in ["create"]:
+            return [IsAuthenticated()]
+
+        return [IsOwner() | IsModerator()]

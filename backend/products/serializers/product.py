@@ -24,6 +24,6 @@ class ProductSerializer(ModelSerializer):
         """
 
         user_id = self.context["request"].user.id
-        user = CustomUser.objects.filter(pk=user_id).only("pk").first()
+        user = CustomUser.objects.only("pk").get(pk=user_id)
         validated_data["user"] = user
         return super().create(validated_data)
