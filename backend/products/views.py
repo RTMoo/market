@@ -26,7 +26,7 @@ class ProductViewSet(ModelViewSet):
         if self.action in ["create"]:
             return [IsAuthenticated()]
 
-        return [IsOwner() | IsModerator()]
+        return [(IsOwner | IsModerator)()]
 
 
 class UserProductViewSet(mixins.ListModelMixin, GenericViewSet):
@@ -83,4 +83,4 @@ class ReviewViewSet(ModelViewSet):
         if self.action in ["create"]:
             return [IsAuthenticated()]
 
-        return [IsOwner() | IsModerator()]
+        return [(IsOwner | IsModerator)()]
