@@ -15,6 +15,7 @@ class ProductSerializer(ModelSerializer):
             "created_at",
             "price",
             "stock",
+            "image"
         ]
         read_only_fields = ["id", "created_at", "user"]
 
