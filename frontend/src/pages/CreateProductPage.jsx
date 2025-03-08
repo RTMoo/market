@@ -4,7 +4,7 @@ import { createProduct, getCategories } from '../api/product';
 import { useNavigate } from 'react-router-dom';
 
 const CreateProductPage = () => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const [categories, setCategories] = useState([]);
     const [formData, setFormData] = useState({
         title: "",
@@ -14,7 +14,8 @@ const CreateProductPage = () => {
         stock: "",
     });
 
-    const fetchCategory = async () => {
+    // Получение списка категорий
+    const fetchCategories = async () => {
         try {
             const response = await getCategories();
             if (response.status === 200) {
@@ -27,32 +28,34 @@ const CreateProductPage = () => {
         }
     };
 
+    useEffect(() => {
+        fetchCategories();
+    }, []);
+
+    // Обработчик изменений в форме
     const handleChange = (e) => {
         const { name, value, type } = e.target;
         setFormData({
             ...formData,
-            [name]: type === "number" ? Number(value) || "" : value,
+            [name]: name === "category" ? Number(value) || "" : type === "number" ? Number(value) || "" : value,
         });
     };
 
+    // Обработчик отправки формы
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
         try {
+            console.log(formData)
             const response = await createProduct(formData);
             if (response.status === 201) {
-                navigate('/profile')
+                navigate('/profile');
             } else {
-                console.log(response.data)
+                console.log(response.data);
             }
         } catch (error) {
             console.error("Ошибка создания продукта:", error);
         }
     };
-
-    useEffect(() => {
-        fetchCategory();
-    }, []);
 
     return (
         <div className='px-6 mt-10'>
@@ -82,10 +85,7 @@ const CreateProductPage = () => {
                 <FormInput label="Цена" name="price" value={formData.price} onChange={handleChange} type="number" />
                 <FormInput label="В наличии" name="stock" value={formData.stock} onChange={handleChange} type="number" />
                 <div className="flex justify-end mt-4">
-                    <button
-                        type="submit"
-                        className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
-                    >
+                    <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
                         Сохранить
                     </button>
                 </div>
