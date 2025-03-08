@@ -37,11 +37,12 @@ const Product = () => {
             ) : (
                 <>
                     {/* Сетка для карточек товаров */}
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                    <div className="grid gap-6 grid-cols-2 sm:grid-cols-3 md:grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
                         {products.map((product) => (
-                            <ProductCard key={product.id} product={product} />
+                            <ProductCard key={product.id} product={product}/>
                         ))}
                     </div>
+
 
                     {/* Пагинация */}
                     <div className="mt-6 flex justify-center">

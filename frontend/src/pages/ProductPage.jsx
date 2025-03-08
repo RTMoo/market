@@ -6,20 +6,22 @@ const ProductPage = () => {
     const { id } = useParams();
     const [product, setProduct] = useState(null);
 
-    useEffect(() => {
-        const fetchProductInfo = async () => {
-            try {
-                const response = await getProductInfo(id);
-                if (response.status === 200) {
-                    const data = response.data;
-                    const category = await getCategoryInfo(data.category);
-                    data.category = category.status === 200 ? category.data.name : "Не указано";
-                    setProduct(data);
-                }
-            } catch (error) {
-                console.log(error);
+    const fetchProductInfo = async () => {
+        try {
+            const response = await getProductInfo(id);
+            if (response.status === 200) {
+                const data = response.data;
+                const category = await getCategoryInfo(data.category);
+                data.category = category.status === 200 ? category.data.name : "Не указано";
+                setProduct(data);
             }
-        };
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    
+    useEffect(() => {
         fetchProductInfo();
     }, [id]);
 

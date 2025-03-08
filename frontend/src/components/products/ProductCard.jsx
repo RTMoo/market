@@ -5,7 +5,7 @@ const ProductCard = ({ product }) => {
     const navigate = useNavigate()
 
     return (
-        <div className="border rounded-xl p-4 shadow-md bg-white h-60 flex flex-col justify-between"
+        <div className="border rounded-xl p-4 shadow-md bg-white h-60 flex flex-col justify-between overflow-hidden"
             onClick={
                 () => {
                     navigate(`/product/${product.id}`)

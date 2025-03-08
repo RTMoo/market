@@ -116,7 +116,7 @@ const Profile = () => {
                         </div>
                     </form>
                     <h2 className="text-2xl font-semibold text-center mb-4">Ваши продукты</h2>
-                    <ProductList products={userProducts} />
+                    <ProductList products={userProducts} setProducts={setUserProducts}/>
                 </div>
                 <div className="flex flex-col">
                     
