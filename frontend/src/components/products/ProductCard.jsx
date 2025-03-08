@@ -1,6 +1,16 @@
+import { useNavigate } from "react-router-dom";
+
+
 const ProductCard = ({ product }) => {
+    const navigate = useNavigate()
+
     return (
-        <div className="border rounded-xl p-4 shadow-md bg-white h-60 flex flex-col justify-between">
+        <div className="border rounded-xl p-4 shadow-md bg-white h-60 flex flex-col justify-between"
+            onClick={
+                () => {
+                    navigate(`/product/${product.id}`)
+                }
+            }>
             <div>
                 <h2 className="text-xl font-bold text-gray-800">{product.title}</h2>
                 <p className="text-gray-600">{product.description}</p>
