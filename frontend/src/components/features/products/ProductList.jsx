@@ -1,9 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { deleteProduct } from "../../../api/product";
-import { VscDiffRemoved } from "react-icons/vsc";
+import { VscDiffRemoved, VscEdit } from "react-icons/vsc";
+import { useState } from "react";
+import ModalUpdateProduct from "./ModalUpdateProduct"
 
 const ProductList = ({ products, setProducts }) => {
     const navigate = useNavigate();
+    const [selectedProduct, setSelectedProduct] = useState(null);
 
     const handleDelete = async (id) => {
         try {
@@ -19,18 +22,38 @@ const ProductList = ({ products, setProducts }) => {
     return (
         <div>
             {products.map((product) => (
-                <div key={product.id} className="border p-3 my-1 flex justify-between" onClick={() => navigate(`/product/${product.id}`)}>
+                <div key={product.id} className="border p-3 my-1 flex justify-between items-center" onClick={() => navigate(`/product/${product.id}`)}>
                     <div className="flex flex-row">
                         <h3 className="mr-5">{product.title}</h3>
                         <p className="mr-5">Цена: {product.price} руб.</p>
                         <p>В наличии: {product.stock} шт.</p>
                     </div>
-                    <VscDiffRemoved onClick={(e) => {
-                        e.stopPropagation(); // Чтобы клик не срабатывал на родительский div
-                        handleDelete(product.id);
-                    }} />
+                    <div className="flex items-center">
+                        <VscEdit 
+                            className="mr-2 cursor-pointer text-blue-500 hover:text-blue-700"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedProduct(product);
+                            }}
+                        />
+                        <VscDiffRemoved 
+                            className="cursor-pointer text-red-500 hover:text-red-700"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleDelete(product.id);
+                            }}
+                        />
+                    </div>
                 </div>
             ))}
+            {selectedProduct && (
+                <ModalUpdateProduct 
+                    product={selectedProduct} 
+                    setProduct={setSelectedProduct} 
+                    setProducts={setProducts}
+                    onClose={() => setSelectedProduct(null)}
+                />
+            )}
         </div>
     );
 };

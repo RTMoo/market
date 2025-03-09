@@ -32,7 +32,7 @@ const Profile = () => {
                     last_name: data.last_name || "",
                     email: data.email,
                     phone_number: data.phone_number || "",
-                    role: data.role || "",
+                    role: data.role,
                 });
                 localStorage.setItem("role", data.role);
             } else {
@@ -69,9 +69,9 @@ const Profile = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError(null); 
+        setError(null);
 
-        const { email, ...updatedData } = formData;
+        const { email, role, ...updatedData } = formData;
 
         try {
             const updatedProfile = await updateProfile(updatedData);
@@ -101,12 +101,12 @@ const Profile = () => {
 
                 <form onSubmit={handleSubmit} className="space-y-4 mb-5">
                     <div className="flex gap-4">
-                        <FormInput label="Имя" type="text" name="first_name" value={profile.first_name} onChange={handleChange} />
-                        <FormInput label="Фамилия" type="text" name="last_name" value={profile.last_name} onChange={handleChange} />
+                        <FormInput label="Имя" type="text" name="first_name" value={formData.first_name} onChange={handleChange} />
+                        <FormInput label="Фамилия" type="text" name="last_name" value={formData.last_name} onChange={handleChange} />
                     </div>
                     <div className="flex gap-4">
-                        <FormInput label="Номер" type="text" name="phone_number" value={profile.phone_number} onChange={handleChange} />
-                        <FormInput label="Почта" type="text" value={profile.email} disabled />
+                        <FormInput label="Номер" type="text" name="phone_number" value={formData.phone_number} onChange={handleChange} />
+                        <FormInput label="Почта" type="text" value={formData.email} disabled />
                     </div>
                     <div className="flex justify-end">
                         <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
@@ -118,25 +118,18 @@ const Profile = () => {
                 <div className="flex items-center justify-center mb-4">
                     <h2 className="text-2xl font-semibold text-center">Ваши продукты</h2>
                     {profile.role === 'S' ?
-                    <VscDiffAdded 
-                        size={40} 
-                        className="text-blue-400 mt-2 cursor-pointer hover:text-blue-500 transition" 
-                        onClick={() => setShowModal(true)} 
-                    /> : null }
+                        <VscDiffAdded
+                            size={40}
+                            className="text-blue-400 mt-2 cursor-pointer hover:text-blue-500 transition"
+                            onClick={() => setShowModal(true)}
+                        /> : null}
                 </div>
 
                 <ProductList products={userProducts} setProducts={setUserProducts} />
             </div>
 
             {showModal && (
-                <div 
-                    className="fixed inset-0 flex items-center justify-center bg-[#00000060] bg-opacity-50 z-50"
-                    onClick={() => setShowModal(false)}
-                >
-                    <div className="bg-white p-6 rounded-lg shadow-lg w-120" onClick={(e) => e.stopPropagation()}>
-                        <ModalCreateProduct />
-                    </div>
-                </div>
+                <ModalCreateProduct onClose={() => setShowModal(false)}/>
             )}
         </div>
     );
