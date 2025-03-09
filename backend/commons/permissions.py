@@ -11,11 +11,20 @@ class IsModerator(BasePermission):
         ).exists()
 
 
+class IsSeller(BasePermission):
+    """Разрешает действие только продавцам"""
+
+    def has_permission(self, request, view):
+        return CustomUser.objects.filter(
+            pk=request.user.id, role=CustomUser.Role.SELLER
+        ).exists()
+
+
 class IsOwner(BasePermission):
-    """Разрешает изменение только владельцу объекта"""
+    """Разрешает действие только владельцу объекта"""
 
     def has_object_permission(self, request, view, obj):
         return obj.user_id == request.user.id
 
 
-__all__ = [IsModerator, IsOwner]
+__all__ = [IsModerator, IsOwner, IsSeller]

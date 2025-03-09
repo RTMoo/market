@@ -25,11 +25,13 @@ class ProfileAPIView(APIView):
                 "last_name",
                 "phone_number",
                 "user__email",
+                "user__role",
             )
             .first()
         )
         data = self.serializer_class(profile).data
         data["email"] = profile["user__email"]
+        data["role"] = profile["user__role"]
 
         return Response(data=data, status=status.HTTP_200_OK)
 
@@ -37,6 +39,7 @@ class ProfileAPIView(APIView):
         """
         Обновить профиль пользователя (только измененные поля)
         """
+
         pn = request.data.get("phone_number")
         if len(pn) > 0:
             try:

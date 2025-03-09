@@ -1,8 +1,8 @@
 from rest_framework.viewsets import ModelViewSet, GenericViewSet, mixins
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from products.models import Product, Category, Review
 from products.serializers import ProductSerializer, CategorySerializer, ReviewSerializer
-from commons.permissions import IsOwner, IsModerator
+from commons.permissions import IsOwner, IsModerator, IsSeller
 from commons.paginations import CustomPagination
 
 
@@ -24,9 +24,11 @@ class ProductViewSet(ModelViewSet):
         if self.action in ["list", "retrieve"]:
             return [AllowAny()]
         if self.action in ["create"]:
-            return [IsAuthenticated()]
-
-        return [(IsOwner | IsModerator)()]
+            return [IsAuthenticated(), IsSeller()]
+        if self.action in ["partial_update", "update"]:
+            return [IsAuthenticated(), IsOwner()]
+        if self.action in ["destroy"]:
+            return [IsAuthenticated(), (IsOwner | IsModerator)()]
 
 
 class UserProductViewSet(mixins.ListModelMixin, GenericViewSet):
