@@ -26,3 +26,6 @@ class Product(Model):
     stock = PositiveIntegerField(default=0)
     created_at = DateTimeField(auto_now_add=True)
     image = ImageField(upload_to="products/", null=True, blank=True)
+
+    class Meta:
+        ordering = ["-created_at"]
