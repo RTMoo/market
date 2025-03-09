@@ -5,7 +5,6 @@ import RegisterPage from './pages/RegisterPage';
 import Home from './pages/Home';
 import Layout from './components/layouts/Layout';
 import Profile from './pages/Profile';
-import CreateProductPage from './pages/CreateProductPage';
 import ProductPage from './pages/ProductPage';
 
 function AppRoutes() {
@@ -18,11 +17,6 @@ function AppRoutes() {
                 <Route path='/profile' element={
                     <Layout>
                         <Profile />
-                    </Layout>
-                } />
-                <Route path='/create-product' element={
-                    <Layout>
-                        <CreateProductPage />
                     </Layout>
                 } />
                 <Route path='/product/:id' element={

@@ -1,6 +1,5 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { deleteProduct } from "../../api/product";
+import { deleteProduct } from "../../../api/product";
 import { VscDiffRemoved } from "react-icons/vsc";
 
 const ProductList = ({ products, setProducts }) => {
@@ -22,8 +21,8 @@ const ProductList = ({ products, setProducts }) => {
             {products.map((product) => (
                 <div key={product.id} className="border p-3 my-1 flex justify-between" onClick={() => navigate(`/product/${product.id}`)}>
                     <div className="flex flex-row">
-                        <h3>{product.title}</h3>
-                        <p>Цена: {product.price} руб.</p>
+                        <h3 className="mr-5">{product.title}</h3>
+                        <p className="mr-5">Цена: {product.price} руб.</p>
                         <p>В наличии: {product.stock} шт.</p>
                     </div>
                     <VscDiffRemoved onClick={(e) => {

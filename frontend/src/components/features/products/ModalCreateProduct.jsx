@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import FormInput from '../components/commons/FormInput';
-import { createProduct, getCategories } from '../api/product';
+import FormInput from '../../commons/FormInput'
+import { createProduct, getCategories } from '../../../api/product'
 import { useNavigate } from 'react-router-dom';
 
-const CreateProductPage = () => {
+const ModalCreateProduct = ({ onClose }) => {
     const navigate = useNavigate();
     const [categories, setCategories] = useState([]);
     const [formData, setFormData] = useState({
@@ -48,7 +48,7 @@ const CreateProductPage = () => {
             console.log(formData)
             const response = await createProduct(formData);
             if (response.status === 201) {
-                navigate('/profile');
+                navigate(0)
             } else {
                 console.log(response.data);
             }
@@ -94,4 +94,4 @@ const CreateProductPage = () => {
     );
 };
 
-export default CreateProductPage;
+export default ModalCreateProduct;

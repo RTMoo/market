@@ -7,7 +7,7 @@ const Header = ({ toggleSidebar }) => {
     const navigate = useNavigate();
     const [menuOpen, setMenuOpen] = useState(false);
     const menuRef = useRef(null);
-    const isAuth = localStorage.getItem('isAuth') || false
+    const isAuth = localStorage.getItem('isAuth') || false;
 
     const handleLogout = async () => {
         try {
@@ -56,13 +56,6 @@ const Header = ({ toggleSidebar }) => {
                                         className="block w-full text-left px-4 py-2 hover:bg-gray-100"
                                     >
                                         Профиль
-                                    </button>
-                                    <hr />
-                                    <button
-                                        onClick={() => navigate("/create-product")}
-                                        className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                                    >
-                                        Создать
                                     </button>
                                     <hr />
                                     <button
