@@ -43,13 +43,17 @@ class CartItemSerializer(ModelSerializer):
         cart = Cart.objects.filter(user=user).first()
         product = Product.objects.filter(id=product_id).first()
         if not cart:
-            raise ValidationError("Корзина не найдено, возможно вы не авторизованы")
+            detail = "Корзина не найдено, возможно вы не авторизованы"
+            raise ValidationError({"detail": detail})
 
         if not product:
-            raise ValidationError("Продукт не найден")
+            detail = "Продукт не найден"
+            raise ValidationError({"detail": detail})
 
-        validated_data["product"] = product
-        validated_data["cart"] = cart
+        is_exists = CartItem.objects.filter(cart=cart, product=product).exists()
+        if is_exists:
+            detail = "У вас уже есть такой товар в корзине"
+            raise ValidationError({"detail": detail})
 
-        res = CartItem.objects.create(**validated_data)
-        return res
+        # Изначально только 1 товар в корзине
+        return CartItem.objects.create(cart=cart, product=product, quantity=1)
