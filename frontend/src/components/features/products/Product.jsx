@@ -38,8 +38,8 @@ const Product = () => {
                 <>
                     {/* Сетка для карточек товаров */}
                     <div className="grid gap-6 grid-cols-2 sm:grid-cols-3 md:grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
-                        {products.map((product) => (
-                            <ProductCard key={product.id} product={product}/>
+                        {products.map((item) => (
+                            <ProductCard key={item.id} item={item}/>
                         ))}
                     </div>
 

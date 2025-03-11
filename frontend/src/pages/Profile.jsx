@@ -5,6 +5,7 @@ import FormInput from "../components/commons/FormInput";
 import ProductList from "../components/features/products/ProductList";
 import { VscDiffAdded } from "react-icons/vsc";
 import ModalCreateProduct from "../components/features/products/ModalCreateProduct";
+import CartList from "../components/features/carts/CartList";
 
 const Profile = () => {
     const [profile, setProfile] = useState(null);
@@ -126,6 +127,9 @@ const Profile = () => {
                 </div>
 
                 <ProductList products={userProducts} setProducts={setUserProducts} />
+                <div className="mb-4"></div>
+                <h2 className="text-2xl font-semibold text-center">Ваша корзина</h2>
+                <CartList />
             </div>
 
             {showModal && (
