@@ -40,7 +40,9 @@ INSTALLED_APPS = [
     "accounts",
     "products",
     "profiles",
+    "carts",
     "phonenumber_field",
+    "setupApp",
 ]
 
 MIDDLEWARE = [
