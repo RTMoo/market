@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import Layout from './components/layouts/Layout';
 import Profile from './pages/Profile';
 import ProductPage from './pages/ProductPage';
+import CartPage from './pages/CartPage';
 
 function AppRoutes() {
     return (
@@ -22,6 +23,11 @@ function AppRoutes() {
                 <Route path='/product/:id' element={
                     <Layout>
                         <ProductPage />
+                    </Layout>
+                } />
+                <Route path='/cart' element={
+                    <Layout>
+                        <CartPage />
                     </Layout>
                 } />
             </Routes>

@@ -63,7 +63,7 @@ const ProductPage = () => {
                 <div>
                     <p className="text-indigo-600 mb-2">Категория: {product.category}</p>
                     <h2 className="text-3xl font-bold mb-2">{product.title}</h2>
-                    <h6 className="text-2xl font-semibold mb-4">${product.price}</h6>
+                    <h6 className="text-2xl font-semibold mb-4">{product.price}₽</h6>
                     <p className="text-gray-500 mb-4">{product.description}</p>
 
 
