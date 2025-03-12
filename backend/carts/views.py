@@ -51,17 +51,37 @@ class CartUpdateView(APIView):
                 {"detail": "Не указано количество"}, status=status.HTTP_400_BAD_REQUEST
             )
 
-        updated_rows = CartItem.objects.filter(
-            id=cart_item_id, cart__user_id=user_id
-        ).update(quantity=quantity)
+        if quantity < 1:
+            return Response(
+                {"detail": "Количество должно быть больше 0"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
-        if updated_rows == 0:
+        # Получаем элемент корзины и связанный с ним продукт
+        try:
+            cart_item = CartItem.objects.select_related("product").get(
+                id=cart_item_id, cart__user_id=user_id
+            )
+        except CartItem.DoesNotExist:
             return Response(
                 {"detail": "Элемент корзины не найден"},
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-        return Response({"detail": "Количество обновлено"}, status=status.HTTP_200_OK)
+        # Проверяем наличие товара на складе
+        if quantity > cart_item.product.stock:
+            return Response(
+                {
+                    "detail": f"Максимально доступное количество: {cart_item.product.stock}"
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # Обновляем количество в корзине
+        cart_item.quantity = quantity
+        cart_item.save()
+
+        return Response({"quantity": "Количество обновлено"}, status=status.HTTP_200_OK)
 
 
 class CartDeleteView(APIView):

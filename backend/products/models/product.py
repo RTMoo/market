@@ -8,6 +8,7 @@ from django.db.models import (
     SET_NULL,
     ImageField,
 )
+from django.core.validators import MinValueValidator
 
 
 class Product(Model):
@@ -23,7 +24,7 @@ class Product(Model):
     )
     description = CharField(max_length=512)
     price = DecimalField(max_digits=10, decimal_places=2)
-    stock = PositiveIntegerField(default=0)
+    stock = PositiveIntegerField(default=1, validators=[MinValueValidator(1)])
     created_at = DateTimeField(auto_now_add=True)
     image = ImageField(upload_to="products/", null=True, blank=True)
 

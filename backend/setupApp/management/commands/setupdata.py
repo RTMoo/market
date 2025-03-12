@@ -47,9 +47,27 @@ class Command(BaseCommand):
 
         # Создаем продукты
         products_data = [
-            {"name": "iPhone", "category": categories[0], "price": 50000},
-            {"name": "LG", "category": categories[1], "price": 100000},
-            {"name": "Книга по Python", "category": categories[2], "price": 2500},
+            {
+                "name": "iPhone",
+                "category": categories[0],
+                "price": 50000,
+                "stock": 10,
+                "description": "description",
+            },
+            {
+                "name": "LG",
+                "category": categories[1],
+                "price": 100000,
+                "stock": 2,
+                "description": "description",
+            },
+            {
+                "name": "Книга по Python",
+                "category": categories[2],
+                "price": 2500,
+                "description": "description",
+                "stock": 4,
+            },
         ]
 
         for product in products_data:
@@ -58,6 +76,8 @@ class Command(BaseCommand):
                 title=product["name"],
                 category=product["category"],
                 price=product["price"],
+                stock=product["stock"],
+                description=product["description"],
             )
             if created:
                 self.stdout.write(
