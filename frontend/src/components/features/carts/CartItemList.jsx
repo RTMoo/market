@@ -1,11 +1,11 @@
 import CartItemCard from "./CartItemCard";
 
-const CartItemList = ({ cartItems }) => {
-    console.log(cartItems)
+const CartItemList = ({ cartItems, setCartItems }) => {
+
     return (
         <>
             {cartItems.map((item) => (
-                <CartItemCard key={item.id} item={item} />
+                <CartItemCard key={item.id} item={item} setCartItems={setCartItems} />
             ))}
         </>
     );

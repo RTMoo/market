@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getProductInfo, getCategoryInfo } from '../api/product';
-import { addCart } from '../api/cart';
+import { addCartItem } from '../api/cart';
 import { useParams } from 'react-router-dom';
 
 const ProductPage = () => {
@@ -24,7 +24,7 @@ const ProductPage = () => {
 
     const handleAddCart = async () => {
         try {
-            const response = await addCart(product.id);
+            const response = await addCartItem(product.id);
 
             if (response.status === 201) {
                 setMessage("Товар добавлен в корзину!");
