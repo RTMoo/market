@@ -79,3 +79,15 @@ class CartDeleteView(APIView):
             )
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class CartClearView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request):
+        user = request.user.id
+        cart = Cart.objects.filter(user_id=user).first()
+        if cart:
+            CartItem.objects.filter(cart=cart).delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
