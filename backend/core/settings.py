@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "products",
     "profiles",
     "carts",
+    "orders",
     "phonenumber_field",
     "setupApp",
 ]
