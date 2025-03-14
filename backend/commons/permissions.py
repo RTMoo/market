@@ -24,7 +24,7 @@ class IsOwner(BasePermission):
     """Разрешает действие только владельцу объекта"""
 
     def has_object_permission(self, request, view, obj):
-        return obj.user_id == request.user.id
+        return obj.seller_id == request.user.id
 
 
 __all__ = [IsModerator, IsOwner, IsSeller]

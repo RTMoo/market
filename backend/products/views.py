@@ -45,7 +45,7 @@ class UserProductViewSet(mixins.ListModelMixin, GenericViewSet):
         return [IsAuthenticated()]
 
     def get_queryset(self):
-        return Product.objects.filter(user=self.request.user.id)
+        return Product.objects.filter(seller=self.request.user.id)
 
 
 class CategoryViewSet(ModelViewSet):

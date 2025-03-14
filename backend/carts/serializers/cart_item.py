@@ -36,13 +36,14 @@ class CartItemSerializer(ModelSerializer):
             "seller",
             "total_item_price",
         ]
+        read_only_fields = ["id", "total_item_price", "seller"]
 
     def create(self, validated_data):
         user = self.context["request"].user.id
         product_id = validated_data.pop("product_id")
 
         cart = Cart.objects.filter(user=user).first()
-        product = Product.objects.select_related("user").filter(id=product_id).first()
+        product = Product.objects.select_related("seller").filter(id=product_id).first()
         if not cart:
             detail = "Корзина не найдено, возможно вы не авторизованы"
             raise ValidationError({"detail": detail})
@@ -58,5 +59,5 @@ class CartItemSerializer(ModelSerializer):
 
         # Изначально только 1 товар в корзине
         return CartItem.objects.create(
-            cart=cart, product=product, seller=product.user, quantity=1
+            cart=cart, product=product, seller=product.seller, quantity=1
         )

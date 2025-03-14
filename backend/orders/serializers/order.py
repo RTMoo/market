@@ -22,7 +22,7 @@ class OrderSerializer(ModelSerializer):
             "created_at",
             "items",
         ]
-        read_only_fields = ["buyer", "total_price", "status", "created_at"]
+        read_only_fields = ["id", "buyer", "total_price", "status", "created_at"]
 
     def create(self, validated_data):
         """Создание заказа из корзины"""
@@ -52,10 +52,10 @@ class OrderSerializer(ModelSerializer):
                     product=item.product,
                     seller=item.product.seller,
                     quantity=item.quantity,
-                    price=item.product.price,
                 )
                 for item in cart_items
             ]
+
             OrderItem.objects.bulk_create(order_items)
 
             cart_items.delete()
