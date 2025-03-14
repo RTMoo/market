@@ -9,13 +9,13 @@ class Command(BaseCommand):
     help = "Создает пользователя, категории и товары"
 
     def handle(self, *args, **kwargs):
-        # Создаем суперпользователя
-        if not CustomUser.objects.filter(email="admin@test.com").exists():
-            user = CustomUser.objects.create_user(
+        # Создаем продавца
+        if not CustomUser.objects.filter(email="a@a.com").exists():
+            seller = CustomUser.objects.create_user(
                 email="a@a.com", password="admin", role=CustomUser.Role.SELLER
             )
-            Cart.objects.create(user=user)
-            Profile.objects.create(user=user)
+            Cart.objects.create(user=seller)
+            Profile.objects.create(user=seller)
             self.stdout.write(
                 self.style.SUCCESS(
                     "✅ Создан пользователь: email=a@a.com, password=admin"
@@ -72,7 +72,7 @@ class Command(BaseCommand):
 
         for product in products_data:
             prod, created = Product.objects.get_or_create(
-                user=user,
+                seller=seller,
                 title=product["name"],
                 category=product["category"],
                 price=product["price"],

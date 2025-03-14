@@ -58,11 +58,14 @@ class CartUpdateView(APIView):
             )
 
         # Получаем элемент корзины и связанный с ним продукт
-        try:
-            cart_item = CartItem.objects.select_related("product").get(
-                id=cart_item_id, cart__user_id=user_id
-            )
-        except CartItem.DoesNotExist:
+
+        cart_item = (
+            CartItem.objects.select_related("product")
+            .filter(id=cart_item_id, cart__user_id=user_id)
+            .first()
+        )
+
+        if not cart_item:
             return Response(
                 {"detail": "Элемент корзины не найден"},
                 status=status.HTTP_404_NOT_FOUND,
@@ -88,8 +91,10 @@ class CartDeleteView(APIView):
     permission_classes = [IsAuthenticated]
 
     def delete(self, request, cart_item_id):
+        user_id = request.user.id
+
         deleted_count, _ = CartItem.objects.filter(
-            id=cart_item_id, cart__user_id=request.user.id
+            id=cart_item_id, cart__user_id=user_id
         ).delete()
 
         if deleted_count == 0:
@@ -105,8 +110,8 @@ class CartClearView(APIView):
     permission_classes = [IsAuthenticated]
 
     def delete(self, request):
-        user = request.user.id
-        cart = Cart.objects.filter(user_id=user).first()
+        user_id = request.user.id
+        cart = Cart.objects.filter(user_id=user_id).first()
         if cart:
             CartItem.objects.filter(cart=cart).delete()
 

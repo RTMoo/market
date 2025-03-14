@@ -12,10 +12,9 @@ class CustomUserManager(BaseUserManager):
             raise ValueError("Email обязателен")
 
         email = self.normalize_email(email)
-        if role is None:
-            role = CustomUser.Role.BUYER
+        role = role or CustomUser.Role.BUYER
 
-        extra_fields.setdefault("role", role)
+        extra_fields["role"] = role
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
@@ -23,9 +22,13 @@ class CustomUserManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, password=None, **extra_fields):
-        extra_fields.setdefault("is_staff", True)
-        extra_fields.setdefault("is_superuser", True)
-        extra_fields.setdefault("role", CustomUser.Role.MODERATOR)
+        extra_fields.update(
+            {
+                "is_staff": True,
+                "is_superuser": True,
+                "role": CustomUser.Role.MODERATOR,
+            }
+        )
 
         return self.create_user(email, password, **extra_fields)
 

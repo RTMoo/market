@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, ValidationError
 from products.models import Product
 from accounts.models import CustomUser
 
@@ -8,7 +8,7 @@ class ProductSerializer(ModelSerializer):
         model = Product
         fields = [
             "id",
-            "user",
+            "seller",
             "title",
             "description",
             "category",
@@ -17,7 +17,7 @@ class ProductSerializer(ModelSerializer):
             "stock",
             "image",
         ]
-        read_only_fields = ["id", "created_at", "user"]
+        read_only_fields = ["id", "created_at", "seller"]
 
     def create(self, validated_data):
         """
@@ -25,6 +25,10 @@ class ProductSerializer(ModelSerializer):
         """
 
         user_id = self.context["request"].user.id
-        user = CustomUser.objects.only("pk").get(pk=user_id)
-        validated_data["user"] = user
+        seller = CustomUser.objects.filter(pk=user_id).first()
+
+        if not seller:
+            raise ValidationError
+
+        validated_data["seller"] = seller
         return super().create(validated_data)

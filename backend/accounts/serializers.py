@@ -26,6 +26,7 @@ class UserRegistrationSerializer(ModelSerializer):
         """
         Проверяет, существует ли пользователь с таким email, и совпадают ли пароли.
         """
+
         if CustomUser.objects.only("id").filter(email=data["email"]).exists():
             raise ValidationError({"email": "Этот email уже используется"})
 
@@ -38,6 +39,7 @@ class UserRegistrationSerializer(ModelSerializer):
         """
         Создаёт нового пользователя после успешной валидации данных.
         """
+
         validated_data.pop("password2")
         user = CustomUser.objects.create_user(**validated_data)
         Profile.objects.create(user=user)
