@@ -1,5 +1,6 @@
 from django.db import transaction
-from rest_framework.serializers import ModelSerializer, ValidationError
+from rest_framework.serializers import ModelSerializer
+from rest_framework.exceptions import ValidationError
 from orders.models import Order, OrderItem
 from .order_item import OrderItemSerializer
 from carts.models import CartItem

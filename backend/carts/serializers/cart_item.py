@@ -4,10 +4,11 @@ from rest_framework.serializers import (
     CharField,
     DecimalField,
     SerializerMethodField,
-    ValidationError,
 )
+
 from carts.models import CartItem, Cart
 from products.models import Product
+from rest_framework.exceptions import PermissionDenied, ValidationError
 
 
 class CartItemSerializer(ModelSerializer):
@@ -43,7 +44,12 @@ class CartItemSerializer(ModelSerializer):
         product_id = validated_data.pop("product_id")
 
         cart = Cart.objects.filter(user=user).first()
-        product = Product.objects.select_related("seller").filter(id=product_id).first()
+        product = Product.objects.filter(id=product_id).select_related("seller").first()
+
+        if product.seller_id == user:
+            detail = "Нельзя добавить свои товары в корзину"
+            raise PermissionDenied({"detail": detail})
+
         if not cart:
             detail = "Корзина не найдено, возможно вы не авторизованы"
             raise ValidationError({"detail": detail})
@@ -53,6 +59,7 @@ class CartItemSerializer(ModelSerializer):
             raise ValidationError({"detail": detail})
 
         is_exists = CartItem.objects.filter(cart=cart, product=product).exists()
+
         if is_exists:
             detail = "У вас уже есть такой товар в корзине"
             raise ValidationError({"detail": detail})

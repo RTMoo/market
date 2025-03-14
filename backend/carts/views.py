@@ -57,8 +57,6 @@ class CartUpdateView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        # Получаем элемент корзины и связанный с ним продукт
-
         cart_item = (
             CartItem.objects.select_related("product")
             .filter(id=cart_item_id, cart__user_id=user_id)
@@ -71,7 +69,6 @@ class CartUpdateView(APIView):
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-        # Проверяем наличие товара на складе
         if quantity > cart_item.product.stock:
             return Response(
                 {
@@ -80,7 +77,6 @@ class CartUpdateView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        # Обновляем количество в корзине
         cart_item.quantity = quantity
         cart_item.save()
 
