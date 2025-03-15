@@ -7,6 +7,7 @@ from rest_framework.serializers import (
 
 from accounts.models import CustomUser
 from profiles.models import Profile
+from carts.models import Cart
 
 
 class UserRegistrationSerializer(ModelSerializer):
@@ -43,5 +44,6 @@ class UserRegistrationSerializer(ModelSerializer):
         validated_data.pop("password2")
         user = CustomUser.objects.create_user(**validated_data)
         Profile.objects.create(user=user)
+        Cart.objects.create(user=user)
 
         return user

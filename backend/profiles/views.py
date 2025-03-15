@@ -18,6 +18,9 @@ class ProfileAPIView(APIView):
         Получить профиль текущего пользователя
         """
 
+        if not request.user:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
         profile = (
             Profile.objects.filter(user=request.user.id)
             .values(
