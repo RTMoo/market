@@ -7,6 +7,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from accounts.serializers import UserRegistrationSerializer
 from rest_framework_simplejwt.views import TokenRefreshView, TokenBlacklistView
 from accounts.utils import set_jwt_token
+from accounts.models import CustomUser
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
@@ -35,10 +36,6 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 
 
 class CustomTokenRefreshView(TokenRefreshView):
-    """
-    Обновление access токена
-    """
-
     def post(self, request, *args, **kwargs):
         refresh_token = request.COOKIES.get("refresh_token")
 
@@ -50,19 +47,28 @@ class CustomTokenRefreshView(TokenRefreshView):
 
         request.data["refresh"] = refresh_token
 
-        response = super().post(request, *args, **kwargs)
+        try:
+            response = super().post(request, *args, **kwargs)
 
-        if response.status_code == status.HTTP_200_OK:
-            new_access_token = response.data.get("access")
+            if response.status_code == status.HTTP_200_OK:
+                new_access_token = response.data.get("access")
 
-            if new_access_token:
-                response = set_jwt_token(
-                    response=response, access_token=new_access_token
-                )
+                if new_access_token:
+                    response = set_jwt_token(
+                        response=response, access_token=new_access_token
+                    )
+                    del response.data["access"]
 
-                del response.data["access"]
+            return response
 
-        return response
+        except CustomUser.DoesNotExist:
+            return Response(
+                {"detail": "User does not exist"}, status=status.HTTP_403_FORBIDDEN
+            )
+        except Exception as e:
+            return Response(
+                {"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 class CustomTokenBlacklistView(TokenBlacklistView):

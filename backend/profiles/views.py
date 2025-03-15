@@ -18,23 +18,27 @@ class ProfileAPIView(APIView):
         Получить профиль текущего пользователя
         """
 
-        if not request.user:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
-
-        profile = (
-            Profile.objects.filter(user=request.user.id)
-            .values(
-                "first_name",
-                "last_name",
-                "phone_number",
-                "user__email",
-                "user__role",
+        try:
+            profile = (
+                Profile.objects.filter(user=request.user.id)
+                .values(
+                    "first_name",
+                    "last_name",
+                    "phone_number",
+                    "user__email",
+                    "user__role",
+                )
+                .first()
             )
-            .first()
-        )
-        data = self.serializer_class(profile).data
-        data["email"] = profile["user__email"]
-        data["role"] = profile["user__role"]
+            data = self.serializer_class(profile).data
+            data["email"] = profile["user__email"]
+            data["role"] = profile["user__role"]
+        except TypeError:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        except Exception as e:
+            return Response(
+                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
         return Response(data=data, status=status.HTTP_200_OK)
 
