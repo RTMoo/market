@@ -66,6 +66,13 @@ const Header = ({ toggleSidebar }) => {
                                     </button>
                                     <hr />
                                     <button
+                                        onClick={() => navigate("/order")}
+                                        className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                                    >
+                                        Заказы
+                                    </button>
+                                    <hr />
+                                    <button
                                         onClick={handleLogout}
                                         className="block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100"
                                     >

@@ -6,7 +6,8 @@ import Home from './pages/Home';
 import Layout from './components/layouts/Layout';
 import Profile from './pages/Profile';
 import ProductPage from './pages/ProductPage';
-import CartPage from './pages/CartPage';
+import CartsPage from './pages/CartsPage';
+import OrdersPage from './pages/OrdersPage';
 
 function AppRoutes() {
     return (
@@ -27,7 +28,12 @@ function AppRoutes() {
                 } />
                 <Route path='/cart' element={
                     <Layout>
-                        <CartPage />
+                        <CartsPage />
+                    </Layout>
+                } />
+                <Route path='/order' element={
+                    <Layout>
+                        <OrdersPage />
                     </Layout>
                 } />
             </Routes>

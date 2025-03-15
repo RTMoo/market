@@ -12,7 +12,7 @@ const RegisterPage = () => {
         e.preventDefault();
         try {
             const response = await register(email, password, password2);
-            if (response.status === 200) {
+            if (response.status === 201) {
                 navigate('/login');
             };
         } catch (error) {

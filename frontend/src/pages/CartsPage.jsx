@@ -2,10 +2,9 @@ import { useState, useEffect } from 'react';
 import { getCart } from '../api/cart';
 import CartItemList from '../components/features/carts/CartItemList';
 import CartTotal from '../components/features/carts/CartTotal';
-import { IoMdTrash } from "react-icons/io";
 
 
-const CartPage = () => {
+const CartsPage = () => {
     const [cartItems, setCartItems] = useState([]);
     const [totalPrice, setTotalPrice] = useState([]);
 
@@ -39,4 +38,4 @@ const CartPage = () => {
     );
 }
 
-export default CartPage;
+export default CartsPage;

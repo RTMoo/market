@@ -29,7 +29,7 @@ const CartItemCard = ({ item, setCartItems }) => {
                     <img
                         src={item.image ? item.image : "../../assets/img/image-not-available.png"}
                         alt={item.product_name}
-                        class="w-full h-full object-contain" />
+                        className="w-full h-full object-contain" />
                 </div>
 
                 <div className="flex flex-col gap-4">
