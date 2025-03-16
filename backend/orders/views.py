@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from orders.serializers import OrderSerializer
 from orders.models import Order
-
+from orders.utils import create_order
 
 class OrderListView(APIView):
     permission_classes = [IsAuthenticated]
@@ -35,9 +35,10 @@ class OrderCreateView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        serializer = OrderSerializer(data=request.data, context={"request": request})
+        serializer = OrderSerializer(data=request.data)
+        
         if serializer.is_valid():
-            serializer.save()
-            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+            create_order(request, serializer.validated_data)
+            return Response(status=status.HTTP_201_CREATED)
 
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
