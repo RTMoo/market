@@ -16,6 +16,16 @@ class OrderListView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+class OrderDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, order_id):
+        user_id = request.user.id
+        order = Order.objects.filter(id=order_id, buyer=user_id).first()
+        serializer = OrderSerializer(order)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 class OrderCreateView(APIView):
     permission_classes = [IsAuthenticated]
 
