@@ -8,6 +8,7 @@ import Profile from './pages/Profile';
 import ProductPage from './pages/ProductPage';
 import CartsPage from './pages/CartsPage';
 import OrdersPage from './pages/OrdersPage';
+import OrderDetails from './pages/OrderDetails';
 
 function AppRoutes() {
     return (
@@ -35,6 +36,11 @@ function AppRoutes() {
                     <Layout>
                         <OrdersPage />
                     </Layout>
+                } />
+                <Route path='/order/:id' element={ 
+                    <Layout>
+                        <OrderDetails />
+                    </Layout>   
                 } />
             </Routes>
         </Router>
