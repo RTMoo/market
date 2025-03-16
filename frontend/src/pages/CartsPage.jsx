@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getCart } from '../api/cart';
 import CartItemList from '../components/features/carts/CartItemList';
-import CartTotal from '../components/features/carts/CartTotal';
-
+import CreateOrderForm from '../components/features/orders/CreateOrderForm';
 
 const CartsPage = () => {
     const [cartItems, setCartItems] = useState([]);
@@ -31,8 +30,7 @@ const CartsPage = () => {
                 <div className="sm:col-span-1 md:col-span-2 space-y-4">
                     <CartItemList cartItems={cartItems} setCartItems={setCartItems} />
                 </div>
-                <CartTotal totalPrice={totalPrice} setCartItems={setCartItems}/>
-
+                <CreateOrderForm totalPrice={totalPrice}/>
             </div>
         </div>
     );
