@@ -26,11 +26,7 @@ const OrderList = () => {
     return (
         <div>
             {orders.map((order) => (
-                <div key={order.id}>
-                    {order.items.map((item) => (
-                        <OrderItemCard key={item.id} item={item} />
-                    ))}
-                </div>
+                <OrderItemCard key={order.id} order={order} />
             ))}
         </div>
     );
