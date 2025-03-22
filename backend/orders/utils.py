@@ -2,7 +2,6 @@ from django.db import transaction
 from rest_framework.exceptions import ValidationError
 from carts.models import CartItem
 from orders.models import Order, OrderItem
-from accounts.models import CustomUser
 
 
 def create_order(request, validated_data):
@@ -42,4 +41,3 @@ def create_order(request, validated_data):
 
         # Удаление товаров из корзины
         CartItem.objects.filter(cart__user_id=user_id).delete()
-

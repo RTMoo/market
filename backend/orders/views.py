@@ -6,6 +6,7 @@ from orders.serializers import OrderSerializer
 from orders.models import Order
 from orders.utils import create_order
 
+
 class OrderListView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -36,7 +37,7 @@ class OrderCreateView(APIView):
 
     def post(self, request):
         serializer = OrderSerializer(data=request.data)
-        
+
         if serializer.is_valid():
             create_order(request, serializer.validated_data)
             return Response(status=status.HTTP_201_CREATED)
