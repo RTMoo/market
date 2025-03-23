@@ -20,7 +20,7 @@ urlpatterns = [
     ),
     # Продавец
     path(
-        "seller/item/list/",
+        "seller/order/list/",
         SellerOrderItemListView.as_view(),
         name="seller_order_item_list",
     ),
