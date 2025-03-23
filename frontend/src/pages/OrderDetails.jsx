@@ -28,15 +28,6 @@ const OrderDetails = () => {
         <div className="bg-white p-6 rounded-2xl max-w-8xl mx-auto">
             <h2 className="text-xl font-bold text-gray-900 mb-4">Заказ #{order.id}</h2>
 
-            <div className="mb-4">
-                <span className={`px-3 py-1 rounded text-sm font-medium 
-                    ${order.status === 'pending' ? 'bg-yellow-100 text-yellow-700' : ''}
-                    ${order.status === 'shipped' ? 'bg-blue-100 text-blue-700' : ''}
-                    ${order.status === 'delivered' ? 'bg-green-100 text-green-700' : ''}
-                `}>
-                    {order.status}
-                </span>
-            </div>
 
             <div className="space-y-4 mb-6">
                 {order.items && order.items.length > 0 ? (
@@ -57,9 +48,19 @@ const OrderDetails = () => {
                                     </p>
                                 </div>
                             </div>
+                            <div className="flex gap-5">
                             <p className="text-lg font-semibold text-gray-900">
                                 {item.quantity * item.product_price} ₸
                             </p>
+                            <span className={`px-3 py-1 rounded text-sm font-medium 
+                                ${item.status === 'pending' ? 'bg-yellow-100 text-yellow-700' : ''}
+                                ${item.status === 'shipped' ? 'bg-blue-100 text-blue-700' : ''}
+                                ${item.status === 'delivered' ? 'bg-green-100 text-green-700' : ''}
+                                ${item.status === 'canceled' ? 'bg-red-100 text-red-700' : ''}
+                            `}>
+                                {item.status}
+                            </span>
+                            </div>
                         </div>
                     ))
                 ) : (
