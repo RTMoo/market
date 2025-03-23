@@ -28,4 +28,5 @@ class OrderItemSerializer(ModelSerializer):
             "product_id",
             "product_name",
             "product_price",
+            "status",
         ]

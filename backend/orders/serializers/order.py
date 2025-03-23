@@ -15,8 +15,7 @@ class OrderSerializer(ModelSerializer):
             "phone_number",
             "to_address",
             "total_price",
-            "status",
             "created_at",
             "items",
         ]
-        read_only_fields = ["id", "buyer", "total_price", "status", "created_at"]
+        read_only_fields = ["id", "buyer", "total_price", "created_at"]

@@ -24,6 +24,20 @@ class Command(BaseCommand):
         else:
             self.stdout.write(self.style.WARNING("⚠️ Пользователь уже существует"))
 
+        if not CustomUser.objects.filter(email="a@b.com").exists():
+            buyer = CustomUser.objects.create_user(
+                email="a@b.com", password="admin", role=CustomUser.Role.BUYER
+            )
+            Cart.objects.create(user=buyer)
+            Profile.objects.create(user=buyer)
+            self.stdout.write(
+                self.style.SUCCESS(
+                    "✅ Создан пользователь: email=a@b.com, password=admin"
+                )
+            )
+        else:
+            self.stdout.write(self.style.WARNING("⚠️ Пользователь уже существует"))
+
         # Создаем категории
         categories_data = [
             {"name": "Мобильник", "slug": "phone"},
