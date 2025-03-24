@@ -1,5 +1,5 @@
 import React from 'react';
-import OrderList from '../components/features/orders/OrderList';
+import OrderList from '../../components/features/orders/OrderList';
 
 const OrdersPage = () => {
     return (

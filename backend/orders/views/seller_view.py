@@ -3,18 +3,50 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from orders.models import OrderItem, Order
-from orders.serializers import OrderSerializer
+from orders.serializers import OrderSerializer, OrderItemSerializer
 
 
-class SellerOrderItemListView(APIView):
+class SellerOrderListView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         seller_id = request.user.id
-        orders = Order.objects.filter(items__seller=seller_id).distinct().prefetch_related("items")
+        orders = (
+            Order.objects.filter(items__seller=seller_id)
+            .distinct()
+            .prefetch_related("items__product")
+        )
 
         serializer = OrderSerializer(instance=orders, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class SellerOrderDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, order_id):
+        seller_id = request.user.id
+        order = (
+            Order.objects.filter(id=order_id)
+            .prefetch_related("items__product")
+            .first()
+            
+        )
+
+        if not order:
+            return Response({"detail": "Order not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        # Фильтруем товары, оставляя только те, где seller_id = текущий продавец
+        filtered_items = OrderItem.objects.filter(seller_id=seller_id, order=order).select_related("product")
+
+        order_data = OrderSerializer(order).data
+        order_data["items"] = OrderItemSerializer(filtered_items, many=True).data
+
+        # Вычисляем общую стоимость
+        total_price = sum(i['quantity'] * i['product_price'] for i in order_data['items'])
+        order_data['total_price'] = total_price
+        
+        return Response(data=order_data, status=status.HTTP_200_OK)
 
 
 class SellerOrderItemUpdateView(APIView):

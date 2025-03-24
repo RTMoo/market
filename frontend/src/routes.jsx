@@ -1,14 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
+import LoginPage from './pages/accounts/LoginPage';
+import RegisterPage from './pages/accounts/RegisterPage';
 import Home from './pages/Home';
 import Layout from './components/layouts/Layout';
-import Profile from './pages/Profile';
-import ProductPage from './pages/ProductPage';
-import CartsPage from './pages/CartsPage';
-import OrdersPage from './pages/OrdersPage';
-import OrderDetails from './pages/OrderDetails';
+import Profile from './pages/profiles/Profile';
+import ProductPage from './pages/products/ProductPage';
+import CartsPage from './pages/carts/CartsPage';
+import OrdersPage from './pages/orders/OrdersPage';
+import OrderDetails from './pages/orders/OrderDetails';
 
 function AppRoutes() {
     return (

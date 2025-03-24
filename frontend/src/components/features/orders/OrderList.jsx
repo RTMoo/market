@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getOrderList } from '../../../api/order';
+import { getOrderList, getSellerOrderList } from '../../../api/order';
 import OrderItemCard from './OrderItemCard';
 
 
@@ -8,7 +7,8 @@ const OrderList = () => {
     const [orders, setOrders] = useState([]);
     const fetchOrders = async () => {
         try {
-            const response = await getOrderList();
+            const role = localStorage.getItem('role');
+            const response = await (role === 'S' ? getSellerOrderList() : getOrderList());
             if (response.status === 200) {
                 setOrders(response.data);
             } else {

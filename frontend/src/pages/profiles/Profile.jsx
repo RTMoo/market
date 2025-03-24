@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { getProfile, updateProfile } from "../api/profile";
-import { getUserProducts } from "../api/product";
-import FormInput from "../components/commons/FormInput";
-import ProductList from "../components/features/products/ProductList";
+import { getProfile, updateProfile } from "../../api/profile";
+import { getUserProducts } from "../../api/product";
+import FormInput from "../../components/commons/FormInput";
+import ProductList from "../../components/features/products/ProductList";
 import { VscDiffAdded } from "react-icons/vsc";
-import ModalCreateProduct from "../components/features/products/ModalCreateProduct";
+import ModalCreateProduct from "../../components/features/products/ModalCreateProduct";
 
 const Profile = () => {
     const [profile, setProfile] = useState(null);

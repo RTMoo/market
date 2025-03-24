@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { getProductInfo, getCategoryInfo } from '../api/product';
-import { addCartItem } from '../api/cart';
+import { getProductInfo, getCategoryInfo } from '../../api/product';
+import { addCartItem } from '../../api/cart';
 import { useParams } from 'react-router-dom';
 
 const ProductPage = () => {
