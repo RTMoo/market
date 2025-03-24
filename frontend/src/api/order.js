@@ -7,4 +7,4 @@ export const getOrderItemDetail = (id) => request("get", `order/item/get/${id}/`
 
 export const getSellerOrderList = () => request("get", `order/seller/list/`);
 export const getSellerOrderDetail = (id) => request("get", `order/seller/get/${id}/`);
-export const updateSellerOrderItem = (id) => request("patch", `order/seller/item/update/${id}/`);
+export const updateSellerOrderStatus = (id, data) => request("patch", `order/seller/update/${id}/`, data);
