@@ -18,7 +18,7 @@ class Order(Model):
     created_at = DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Order {self.id} - {self.status}"
+        return f"Order {self.id}"
 
     class Meta:
         ordering = ["-created_at"]
