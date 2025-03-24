@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { getOrderDetail } from '../api/order';
+import { getOrderDetail, getSellerOrderDetail } from '../../api/order';
 
 const OrderDetails = () => {
     const { id } = useParams();
@@ -8,7 +8,8 @@ const OrderDetails = () => {
 
     const fetchOrder = async () => {
         try {
-            const response = await getOrderDetail(id);
+            const role = localStorage.getItem('role');
+            const response = await (role === 'S' ? getSellerOrderDetail(id) : getOrderDetail(id));
             if (response.status === 200) {
                 setOrder(response.data);
             } else {

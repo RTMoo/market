@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { getCart } from '../api/cart';
-import CartItemList from '../components/features/carts/CartItemList';
-import CreateOrderForm from '../components/features/orders/CreateOrderForm';
+import { getCart } from '../../api/cart';
+import CartItemList from '../../components/features/carts/CartItemList';
+import CreateOrderForm from '../../components/features/orders/CreateOrderForm';
 
 const CartsPage = () => {
     const [cartItems, setCartItems] = useState([]);
