@@ -1,8 +1,8 @@
 from django.urls import path
 from orders.views import (
-    OrderCreateView,
-    OrderListView,
-    OrderDetailView,
+    BuyerOrderCreateView,
+    BuyerOrderListView,
+    BuyerOrderDetailView,
     SellerOrderListView,
     SellerOrderStatusUpdateView,
     SellerOrderDetailView,
@@ -10,9 +10,9 @@ from orders.views import (
 
 urlpatterns = [
     # Покупатель
-    path("list/", OrderListView.as_view(), name="order_list"),
-    path("create/", OrderCreateView.as_view(), name="order_create"),
-    path("get/<int:order_id>/", OrderDetailView.as_view(), name="order_detail"),
+    path("list/", BuyerOrderListView.as_view(), name="order_list"),
+    path("create/", BuyerOrderCreateView.as_view(), name="order_create"),
+    path("get/<int:order_id>/", BuyerOrderDetailView.as_view(), name="order_detail"),
     # Продавец
     path(
         "seller/get/<int:order_id>/",

@@ -3,11 +3,11 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from orders.serializers import OrderSerializer
-from orders.models import Order
+from orders.models import Order, OrderItem
 from orders.utils import create_order
 
 
-class OrderListView(APIView):
+class BuyerOrderListView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -18,7 +18,7 @@ class OrderListView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class OrderDetailView(APIView):
+class BuyerOrderDetailView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, order_id):
@@ -32,7 +32,7 @@ class OrderDetailView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class OrderCreateView(APIView):
+class BuyerOrderCreateView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):

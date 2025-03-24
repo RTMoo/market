@@ -1,7 +1,7 @@
 from .buyer_view import (
-    OrderListView,
-    OrderCreateView,
-    OrderDetailView,
+    BuyerOrderCreateView,
+    BuyerOrderListView,
+    BuyerOrderDetailView,
 )
 from .seller_view import (
     SellerOrderStatusUpdateView,
@@ -11,9 +11,9 @@ from .seller_view import (
 
 
 __all__ = [
-    OrderListView,
-    OrderCreateView,
-    OrderDetailView,
+    BuyerOrderListView,
+    BuyerOrderCreateView,
+    BuyerOrderDetailView,
     SellerOrderStatusUpdateView,
     SellerOrderListView,
     SellerOrderDetailView,
