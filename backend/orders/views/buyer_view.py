@@ -11,8 +11,8 @@ class OrderListView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        user_id = request.user.id
-        orders = Order.objects.filter(buyer=user_id).prefetch_related("items__product")
+        buyer_id = request.user.id
+        orders = Order.objects.filter(buyer=buyer_id).prefetch_related("items__product")
 
         serializer = OrderSerializer(orders, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -22,9 +22,9 @@ class OrderDetailView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, order_id):
-        user_id = request.user.id
+        buyer_id = request.user.id
         order = (
-            Order.objects.filter(id=order_id, buyer=user_id)
+            Order.objects.filter(id=order_id, buyer=buyer_id)
             .prefetch_related("items__product")
             .first()
         )

@@ -49,7 +49,7 @@ class SellerOrderDetailView(APIView):
         return Response(data=order_data, status=status.HTTP_200_OK)
 
 
-class SellerOrderItemUpdateView(APIView):
+class SellerOrderStatusUpdateView(APIView):
     permission_classes = [IsAuthenticated]
 
     def patch(self, request, order_item_id):

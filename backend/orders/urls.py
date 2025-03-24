@@ -4,7 +4,7 @@ from orders.views import (
     OrderListView,
     OrderDetailView,
     SellerOrderListView,
-    SellerOrderItemUpdateView,
+    SellerOrderStatusUpdateView,
     SellerOrderDetailView,
 )
 
@@ -26,7 +26,7 @@ urlpatterns = [
     ),
     path(
         "seller/update/<int:order_item_id>/",
-        SellerOrderItemUpdateView.as_view(),
+        SellerOrderStatusUpdateView.as_view(),
         name="seller_order_item_update",
     ),
 ]
