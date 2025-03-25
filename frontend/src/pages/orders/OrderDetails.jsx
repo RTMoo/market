@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { getOrderDetail, getSellerOrderDetail, updateSellerOrderStatus } from "../../api/order";
+import { getOrderDetail, getSellerOrderDetail, updateSellerOrderStatus, updateBuyerOrderStatus } from "../../api/order";
 import { GrDeliver } from "react-icons/gr";
-import { toast } from "react-toastify"; // Для уведомлений
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 const OrderDetails = () => {
     const { id } = useParams();
@@ -27,16 +26,19 @@ const OrderDetails = () => {
         }
     };
 
-    const updateStatus = async (itemId) => {
+    const updateStatus = async (itemId, newStatus) => {
         try {
-            
-            const response = await updateSellerOrderStatus(itemId, { status: "shipped" });
+            const response = await (
+                role === "S" ? 
+                updateSellerOrderStatus(itemId, { status: newStatus }) :
+                updateBuyerOrderStatus(itemId, { status: newStatus })
+            );
             if (response.status === 200) {
-                toast.success("Заказ успешно отправлен! 🚚");
+                toast.success(`Статус обновлён: ${newStatus}`);
                 setOrder((prev) => ({
                     ...prev,
                     items: prev.items.map((item) =>
-                        item.id === itemId ? { ...item, status: "shipped" } : item
+                        item.id === itemId ? { ...item, status: newStatus } : item
                     ),
                 }));
             } else {
@@ -74,31 +76,46 @@ const OrderDetails = () => {
                                     {item.quantity * item.product_price} ₸
                                 </p>
 
-                                {role === "S" ? 
-                                (item.status === "pending" ? (
-                                    <button
-                                        className="flex items-center gap-2 border rounded-xl p-2 hover:bg-gray-100 transition"
-                                        onClick={() => updateStatus(item.id)}
-                                    >
-                                        <p className="font-bold">Отправить</p>
-                                        <GrDeliver size={30} className="text-blue-500" />
-                                    </button>
+                                {role === "S" ? (
+                                    item.status === "pending" ? (
+                                        <button
+                                            className="flex items-center gap-2 border rounded-xl p-2 hover:bg-gray-100 transition"
+                                            onClick={() => updateStatus(item.id, "shipped")}
+                                        >
+                                            <p className="font-bold">Отправить</p>
+                                            <GrDeliver size={30} className="text-blue-500" />
+                                        </button>
+                                    ) : (
+                                        <span className={`px-3 py-1 rounded text-sm font-medium 
+                                            ${item.status === "pending" ? "bg-yellow-100 text-yellow-700" : ""}
+                                            ${item.status === "shipped" ? "bg-blue-100 text-blue-700" : ""}
+                                            ${item.status === "delivered" ? "bg-green-100 text-green-700" : ""}
+                                            ${item.status === "canceled" ? "bg-red-100 text-red-700" : ""}`}>{item.status}</span>
+                                    )
                                 ) : (
-                                    <span
-                                        className={`px-3 py-1 rounded text-sm font-medium ${item.status === "pending" ? "bg-yellow-100 text-yellow-700" : ""
-                                            } ${item.status === "shipped" ? "bg-blue-100 text-blue-700" : ""} ${item.status === "delivered" ? "bg-green-100 text-green-700" : ""
-                                            } ${item.status === "canceled" ? "bg-red-100 text-red-700" : ""}`}> {item.status}
-                                    </span>
-                                )
-                                ) : (
-                                    <span
-                                        className={`px-3 py-1 rounded text-sm font-medium ${item.status === "pending" ? "bg-yellow-100 text-yellow-700" : ""
-                                            } ${item.status === "shipped" ? "bg-blue-100 text-blue-700" : ""} ${item.status === "delivered" ? "bg-green-100 text-green-700" : ""
-                                            } ${item.status === "canceled" ? "bg-red-100 text-red-700" : ""}`}
-                                    >
-                                        {item.status}
-                                    </span>
+                                    item.status === "shipped" ? (
+                                        <>
+                                            <span className="px-3 py-1 rounded text-sm font-medium bg-blue-100 text-blue-700">{item.status}</span>
+                                            <button
+                                                className="px-3 py-1 rounded bg-green-500 text-white font-medium hover:bg-green-600 transition"
+                                                onClick={() => updateStatus(item.id, "delivered")}
+                                            >
+                                                Подтвердить
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <span className={`px-3 py-1 rounded text-sm font-medium 
+                                            ${item.status === "pending" ? "bg-yellow-100 text-yellow-700" : ""}
+                                            ${item.status === "shipped" ? "bg-blue-100 text-blue-700" : ""}
+                                            ${item.status === "delivered" ? "bg-green-100 text-green-700" : ""}
+                                            ${item.status === "canceled" ? "bg-red-100 text-red-700" : ""}`}>{item.status}</span>
+                                    )
                                 )}
+                                {item.status != "delivered" && item.status != "canceled" && 
+                                    <button
+                                    className="px-3 py-1 rounded bg-red-500 text-white font-medium hover:bg-red-600 transition"
+                                    onClick={() => updateStatus(item.id, "canceled")}>Отменить</button>
+                                }
                             </div>
                         </div>
                     ))
