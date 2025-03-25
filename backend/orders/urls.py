@@ -1,18 +1,28 @@
 from django.urls import path
 from orders.views import (
-    OrderCreateView,
-    OrderListView,
-    OrderDetailView,
+    BuyerOrderCreateView,
+    BuyerOrderListView,
+    BuyerOrderDetailView,
+    BuyerOrderStatusUpdateView,
     SellerOrderListView,
-    SellerOrderItemUpdateView,
+    SellerOrderStatusUpdateView,
     SellerOrderDetailView,
 )
 
 urlpatterns = [
     # Покупатель
-    path("list/", OrderListView.as_view(), name="order_list"),
-    path("create/", OrderCreateView.as_view(), name="order_create"),
-    path("get/<int:order_id>/", OrderDetailView.as_view(), name="order_detail"),
+    path("buyer/list/", BuyerOrderListView.as_view(), name="buyer_order_list"),
+    path("buyer/create/", BuyerOrderCreateView.as_view(), name="buyer_order_create"),
+    path(
+        "buyer/get/<int:order_id>/",
+        BuyerOrderDetailView.as_view(),
+        name="buyer_order_detail",
+    ),
+    path(
+        "buyer/update/<int:order_item_id>/",
+        BuyerOrderStatusUpdateView.as_view(),
+        name="buyer_order_update",
+    ),
     # Продавец
     path(
         "seller/get/<int:order_id>/",
@@ -22,11 +32,11 @@ urlpatterns = [
     path(
         "seller/list/",
         SellerOrderListView.as_view(),
-        name="seller_order_item_list",
+        name="seller_order_list",
     ),
     path(
         "seller/update/<int:order_item_id>/",
-        SellerOrderItemUpdateView.as_view(),
-        name="seller_order_item_update",
+        SellerOrderStatusUpdateView.as_view(),
+        name="seller_order_update",
     ),
 ]
