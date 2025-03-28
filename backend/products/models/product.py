@@ -13,7 +13,7 @@ from django.core.validators import MinValueValidator
 
 class Product(Model):
     seller = ForeignKey(to="accounts.CustomUser", on_delete=SET_NULL, null=True)
-    title = CharField(max_length=255)
+    name = CharField(max_length=255)
     category = ForeignKey(
         to="products.Category", on_delete=SET_NULL, null=True, blank=True
     )

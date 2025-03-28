@@ -9,7 +9,7 @@ from orders.models import OrderItem
 
 class OrderItemSerializer(ModelSerializer):
     product_id = IntegerField(write_only=True)
-    product_name = CharField(source="product.title", read_only=True)
+    product_name = CharField(source="product.name", read_only=True)
     product_price = DecimalField(
         source="product.price",
         read_only=True,

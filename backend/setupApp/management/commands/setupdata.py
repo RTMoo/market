@@ -87,7 +87,7 @@ class Command(BaseCommand):
         for product in products_data:
             prod, created = Product.objects.get_or_create(
                 seller=seller,
-                title=product["name"],
+                name=product["name"],
                 category=product["category"],
                 price=product["price"],
                 stock=product["stock"],
