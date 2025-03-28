@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { getProductInfo, getCategoryInfo } from '../../api/product';
 import { addCartItem } from '../../api/cart';
 import { useParams } from 'react-router-dom';
-
+import ProductReviews from '../../components/features/reviews/ReviewList';
 const ProductPage = () => {
     const { id } = useParams();
     const [product, setProduct] = useState(null);
@@ -76,6 +76,8 @@ const ProductPage = () => {
                     </button>
                 </div>
             </div>
+            <div className="mb-5"></div>
+            <ProductReviews productId={product.id}/>
         </section>
     );
 };

@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { getOrderDetail, getSellerOrderDetail, updateSellerOrderStatus, updateBuyerOrderStatus } from "../../api/order";
 import { GrDeliver } from "react-icons/gr";
 import { toast } from "react-toastify";
 
+
 const OrderDetails = () => {
+    const navigate = useNavigate();
     const { id } = useParams();
     const [order, setOrder] = useState(null);
     const role = localStorage.getItem("role");
@@ -18,6 +20,7 @@ const OrderDetails = () => {
             const response = await (role === "S" ? getSellerOrderDetail(id) : getOrderDetail(id));
             if (response.status === 200) {
                 setOrder(response.data);
+                console.log(response.data)
             } else {
                 console.log(response.data, response.status);
             }
@@ -51,7 +54,7 @@ const OrderDetails = () => {
     };
 
     if (!order) return <p className="text-gray-500">Загрузка...</p>;
-
+    
     return (
         <div className="bg-white p-6 rounded-2xl max-w-8xl mx-auto">
             <h2 className="text-xl font-bold text-gray-900 mb-4">Заказ #{order.id}</h2>
@@ -65,7 +68,7 @@ const OrderDetails = () => {
                                     <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded-lg" />
                                 )}
                                 <div>
-                                    <h3 className="text-lg font-medium text-gray-900">{item.product_name}</h3>
+                                    <h3 onClick={() => navigate(`/product/${item.product_id}`)} className="text-lg font-medium text-gray-900">{item.product_name}</h3>
                                     <p className="text-sm text-gray-500">
                                         {item.quantity} шт. x {item.product_price} ₸
                                     </p>
