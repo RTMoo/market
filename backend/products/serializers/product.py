@@ -9,7 +9,7 @@ class ProductSerializer(ModelSerializer):
         fields = [
             "id",
             "seller",
-            "title",
+            "name",
             "description",
             "category",
             "created_at",

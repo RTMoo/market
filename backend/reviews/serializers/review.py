@@ -1,5 +1,4 @@
 from rest_framework.serializers import ModelSerializer, IntegerField
-from products.models import Product
 from reviews.models import Review
 
 
