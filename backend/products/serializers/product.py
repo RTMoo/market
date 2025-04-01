@@ -3,6 +3,7 @@ from rest_framework.serializers import (
     IntegerField,
     SerializerMethodField,
 )
+from rest_framework.serializers import ModelSerializer
 from products.models import Product
 
 
