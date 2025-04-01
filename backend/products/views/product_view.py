@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from products.models import Product
 from products.serializers import ProductSerializer
 from commons.paginations import ProductPagination
+from accounts.models import CustomUser
 
 
 @api_view(["GET"])
@@ -32,7 +33,28 @@ def get_product_detail(request, product_id):
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def create_product(request):
-    pass
+    serializer = ProductSerializer(data=request.data)
+    if serializer.is_valid():
+        seller = CustomUser.objects.filter(id=request.user.id).first()
+
+        if not seller:
+            return Response(
+                "Такого продавца нет в базе данных", status=status.HTTP_404_NOT_FOUND
+            )
+
+        if seller.role != CustomUser.Role.SELLER:
+            return Response(
+                "Вы не можете создать продукт так как не являетесь продавцом",
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        validated_data = serializer.validated_data
+        product = Product.objects.create(seller=seller, **validated_data)
+
+        data = ProductSerializer(instance=product).data
+        return Response(data=data, status=status.HTTP_200_OK)
+
+    return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["PATCH"])
