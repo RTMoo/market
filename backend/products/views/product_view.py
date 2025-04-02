@@ -11,7 +11,7 @@ from accounts.models import CustomUser
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def get_product_list(request):
-    product_list = Product.objects.all()
+    product_list = Product.objects.all().select_related("category")
     paginator = ProductPagination()
     queryset = paginator.paginate_queryset(queryset=product_list, request=request)
     data = ProductSerializer(instance=queryset, many=True).data
@@ -22,7 +22,11 @@ def get_product_list(request):
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def get_product_detail(request, product_id):
-    product = Product.objects.filter(id=product_id).first()
+    product = (
+        Product.objects.filter(id=product_id)
+        .select_related("category")
+        .first()
+    )
 
     if not product:
         return Response(
@@ -66,7 +70,7 @@ def create_product(request):
         product = Product.objects.create(seller=seller, **validated_data)
 
         data = ProductSerializer(instance=product).data
-        return Response(data=data, status=status.HTTP_200_OK)
+        return Response(data=data, status=status.HTTP_201_CREATED)
 
     return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
