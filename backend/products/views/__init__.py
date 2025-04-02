@@ -10,6 +10,7 @@ from .product_view import (
     update_product,
     delete_product,
     create_product,
+    get_seller_product_list,
 )
 
 
@@ -23,4 +24,5 @@ __all__ = [
     create_category,
     update_category,
     delete_category,
+    get_seller_product_list,
 ]

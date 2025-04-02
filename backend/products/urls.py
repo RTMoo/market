@@ -9,6 +9,7 @@ from products.views import (
     create_category,
     update_category,
     delete_category,
+    get_seller_product_list,
 )
 
 urlpatterns = [
@@ -19,7 +20,10 @@ urlpatterns = [
     ),
     path("products/<int:product_id>/delete/", delete_product, name="delete_product"),
     path("products/<int:product_id>/update/", update_product, name="update_product"),
-    path("categories/list", get_category_list, name="get_category_list"),
+    path(
+        "products/seller-list/", get_seller_product_list, name="get_seller_product_list"
+    ),
+    path("categories/list/", get_category_list, name="get_category_list"),
     path("categories/create/", create_category, name="create_category"),
     path(
         "categories/<int:category_id>/update/", update_category, name="update_category"
