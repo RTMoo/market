@@ -24,7 +24,7 @@ const ProductList = ({ products, setProducts }) => {
             {products.map((product) => (
                 <div key={product.id} className="border p-3 my-1 flex justify-between items-center" onClick={() => navigate(`/product/${product.id}`)}>
                     <div className="flex flex-row">
-                        <h3 className="mr-5">{product.title}</h3>
+                        <h3 className="mr-5 hover:underline">{product.name}</h3>
                         <p className="mr-5">Цена: {product.price} руб.</p>
                         <p>В наличии: {product.stock} шт.</p>
                     </div>

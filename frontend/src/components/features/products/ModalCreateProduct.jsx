@@ -7,9 +7,9 @@ const ModalCreateProduct = ({ onClose }) => {
     const navigate = useNavigate();
     const [categories, setCategories] = useState([]);
     const [formData, setFormData] = useState({
-        title: "",
+        name: "",
         description: "",
-        category: "",
+        category_id: "",
         price: "",
         stock: "",
     });
@@ -37,7 +37,7 @@ const ModalCreateProduct = ({ onClose }) => {
         const { name, value, type } = e.target;
         setFormData({
             ...formData,
-            [name]: name === "category" ? Number(value) || "" : type === "number" ? Number(value) || "" : value,
+            [name]: name === "category_id" ? Number(value) || "" : type === "number" ? Number(value) || "" : value,
         });
     };
 
@@ -65,15 +65,15 @@ const ModalCreateProduct = ({ onClose }) => {
                 <div className='px-6 mt-10'>
                     <h2 className='text-2xl font-semibold text-center mb-4'>Создать продукт</h2>
                     <form onSubmit={handleSubmit}>
-                        <FormInput label="Заголовок" name="title" value={formData.title} onChange={handleChange} type="text" />
+                        <FormInput label="Заголовок" name="name" value={formData.title} onChange={handleChange} type="text" />
                         <FormInput label="Описание" name="description" value={formData.description} onChange={handleChange} isTextArea />
 
                         {/* Поле выбора категории */}
                         <div className="w-full">
                             <label className="block text-gray-600">Категория</label>
                             <select
-                                name="category"
-                                value={formData.category}
+                                name="category_id"
+                                value={formData.category_id}
                                 onChange={handleChange}
                                 className="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500"
                             >

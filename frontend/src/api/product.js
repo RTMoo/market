@@ -1,11 +1,10 @@
 import { request } from './request'
 
-export const getProducts = (page = 1) => request('get', `catalog/product/?page=${page}`)
-export const createProduct = (data) => request('post', 'catalog/product/', data)
-export const getUserProducts = () => request('get', 'catalog/user-products/')
-export const getProductInfo = (id) => request('get', `catalog/product/${id}/`)
-export const deleteProduct = (id) => request('delete', `catalog/product/${id}/`)
-export const updateProduct = (id, data) => request('patch', `catalog/product/${id}/`, data)
+export const getProducts = (page = 1) => request('get', `catalog/products/list/?page=${page}`)
+export const createProduct = (data) => request('post', 'catalog/products/create/', data)
+export const getUserProducts = () => request('get', 'catalog/products/seller-list/')
+export const getProductInfo = (id) => request('get', `catalog/products/${id}/get/`)
+export const deleteProduct = (id) => request('delete', `catalog/products/${id}/delete/`)
+export const updateProduct = (id, data) => request('patch', `catalog/products/${id}/update/`, data)
 
-export const getCategories = () => request('get', 'catalog/category/')
-export const getCategoryInfo = (id) => request('get', `catalog/category/${id}/`)
+export const getCategories = () => request('get', 'catalog/categories/list/')

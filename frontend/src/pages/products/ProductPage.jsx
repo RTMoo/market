@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getProductInfo, getCategoryInfo } from '../../api/product';
+import { getProductInfo} from '../../api/product';
 import { addCartItem } from '../../api/cart';
 import { useParams } from 'react-router-dom';
 import ProductReviews from '../../components/features/reviews/ReviewList';
@@ -13,8 +13,6 @@ const ProductPage = () => {
             const response = await getProductInfo(id);
             if (response.status === 200) {
                 const data = response.data;
-                const category = await getCategoryInfo(data.category);
-                data.category = category.status === 200 ? category.data.name : "Не указано";
                 setProduct(data);
             }
         } catch (error) {
@@ -61,7 +59,7 @@ const ProductPage = () => {
                     />
                 </div>
                 <div>
-                    <p className="text-indigo-600 mb-2">Категория: {product.category}</p>
+                    <p className="text-indigo-600 mb-2">Категория: {product.category_name}</p>
                     <h2 className="text-3xl font-bold mb-2">{product.title}</h2>
                     <h6 className="text-2xl font-semibold mb-4">{product.price}₽</h6>
                     <p className="text-gray-500 mb-4">{product.description}</p>

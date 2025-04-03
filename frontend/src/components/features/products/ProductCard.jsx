@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
 
-const ProductCard = ({ item, isCart=false }) => {
+const ProductCard = ({ item }) => {
     const navigate = useNavigate()
 
     return (
@@ -12,19 +12,25 @@ const ProductCard = ({ item, isCart=false }) => {
                 }
             }>
             <div>
-                <h2 className="text-xl font-bold text-gray-800">
-                    {isCart ? item.product_name : item.title}
-                </h2>
+                <span className="text-xl font-bold text-gray-800 hover:underline">
+                    {item.name}
+                </span>
             </div>
             <div className="">
                 <p className="text-lg font-semibold mt-2">
                     Цена: <span className="text-green-500">
-                        {isCart ? item.product_price : item.price}₽
+                        {item.price}₽
+                    </span>
+                </p>
+                <p className="text-lg font-semibold mt-2">
+                    Категория: <span className="text-blue-300">
+                        {item.category_name}
                     </span>
                 </p>
                 <p className="text-sm text-gray-500">
-                    {isCart ? "В корзине:" : "Остаток:"}
-                    {isCart ? item.quantity : item.stock}</p>
+                    Остаток:
+                    {item.stock}
+                </p>
             </div>
         </div>
     );
