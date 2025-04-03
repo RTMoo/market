@@ -4,6 +4,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from products.models import Category
 from products.serializers import CategorySerializer
+from commons.permissions import IsModerator
 
 
 @api_view(["GET"])
@@ -16,18 +17,38 @@ def get_category_list(request):
 
 
 @api_view(["POST"])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsModerator])
 def create_category(request):
-    pass
+    serializer = CategorySerializer(data=request.data)
+    if serializer.is_valid():
+        category = Category.objects.create(**serializer.validated_data)
+        data = CategorySerializer(instance=category).data
+
+        return Response(data=data, status=status.HTTP_201_CREATED)
+
+    return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["PATCH"])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsModerator])
 def update_category(request, category_id):
-    pass
+    serializer = CategorySerializer(data=request.data, partial=True)
+    if serializer.is_valid():
+        Category.objects.filter(id=category_id).update(**serializer.validated_data)
+        category = Category.objects.filter(id=category_id).first()
+        data = CategorySerializer(instance=category).data
+
+        return Response(data=data, status=status.HTTP_200_OK)
+
+    return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["DELETE"])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsModerator])
 def delete_category(request, category_id):
-    pass
+    is_deleted, _ = Category.objects.filter(id=category_id).delete()
+
+    if is_deleted:
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    return Response(status=status.HTTP_404_NOT_FOUND)

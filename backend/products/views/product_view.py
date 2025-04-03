@@ -22,11 +22,7 @@ def get_product_list(request):
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def get_product_detail(request, product_id):
-    product = (
-        Product.objects.filter(id=product_id)
-        .select_related("category")
-        .first()
-    )
+    product = Product.objects.filter(id=product_id).select_related("category").first()
 
     if not product:
         return Response(

@@ -1,6 +1,9 @@
-from rest_framework.serializers import ModelSerializer, IntegerField, SerializerMethodField
+from rest_framework.serializers import (
+    ModelSerializer,
+    IntegerField,
+    SerializerMethodField,
+)
 from products.models import Product
-
 
 
 class ProductSerializer(ModelSerializer):
@@ -15,7 +18,7 @@ class ProductSerializer(ModelSerializer):
             "name",
             "description",
             "category_id",
-            "category_name",  # Добавляем имя категории
+            "category_name",
             "created_at",
             "price",
             "stock",
@@ -24,4 +27,4 @@ class ProductSerializer(ModelSerializer):
         read_only_fields = ["id", "created_at", "seller", "category_name"]
 
     def get_category_name(self, obj):
-        return obj.category.name if obj.category else None  # Бер
+        return obj.category.name if obj.category else "Без категории"
