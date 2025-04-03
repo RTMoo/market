@@ -11,11 +11,11 @@ from django.conf import settings
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/accounts/", include("accounts.urls")),
-    path("api/catalog/", include("products.urls")),
-    path("api/profile/", include("profiles.urls")),
-    path("api/cart/", include("carts.urls")),
-    path("api/order/", include("orders.urls")),
-    path("api/review/", include("reviews.urls")),
+    path("api/catalogs/", include("products.urls")),
+    path("api/profiles/", include("profiles.urls")),
+    path("api/carts/", include("carts.urls")),
+    path("api/orders/", include("orders.urls")),
+    path("api/reviews/", include("reviews.urls")),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path(
         "api/docs/swagger/",
