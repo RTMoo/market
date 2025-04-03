@@ -1,9 +1,15 @@
-from rest_framework.serializers import ModelSerializer, ValidationError
+from rest_framework.serializers import (
+    ModelSerializer,
+    IntegerField,
+    SerializerMethodField,
+)
 from products.models import Product
-from accounts.models import CustomUser
 
 
 class ProductSerializer(ModelSerializer):
+    category_id = IntegerField(write_only=True)
+    category_name = SerializerMethodField()
+
     class Meta:
         model = Product
         fields = [
@@ -11,24 +17,14 @@ class ProductSerializer(ModelSerializer):
             "seller",
             "name",
             "description",
-            "category",
+            "category_id",
+            "category_name",
             "created_at",
             "price",
             "stock",
             "image",
         ]
-        read_only_fields = ["id", "created_at", "seller"]
+        read_only_fields = ["id", "created_at", "seller", "category_name"]
 
-    def create(self, validated_data):
-        """
-        Автоматическая привязка пользователя при создании продукта
-        """
-
-        user_id = self.context["request"].user.id
-        seller = CustomUser.objects.filter(pk=user_id).first()
-
-        if not seller:
-            raise ValidationError
-
-        validated_data["seller"] = seller
-        return super().create(validated_data)
+    def get_category_name(self, obj):
+        return obj.category.name if obj.category else "Без категории"
