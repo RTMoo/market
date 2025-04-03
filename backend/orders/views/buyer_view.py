@@ -39,8 +39,10 @@ class BuyerOrderCreateView(APIView):
         serializer = OrderSerializer(data=request.data)
 
         if serializer.is_valid():
-            create_order(request, serializer.validated_data)
-            return Response(status=status.HTTP_201_CREATED)
+            order = create_order(request, serializer.validated_data)
+            data = OrderSerializer(instance=order).data
+
+            return Response(data=data, status=status.HTTP_201_CREATED)
 
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

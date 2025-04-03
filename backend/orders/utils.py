@@ -41,3 +41,5 @@ def create_order(request, validated_data):
 
         # Удаление товаров из корзины
         CartItem.objects.filter(cart__user_id=user_id).delete()
+
+        return order
