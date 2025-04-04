@@ -1,12 +1,12 @@
 import { request } from "./request";
 
 
-export const getOrderList = () => request("get", "order/buyer/list/");
-export const getOrderDetail = (id) => request("get", `order/buyer/get/${id}/`);
-export const createOrder = (data) => request("post", "order/buyer/create/", data);
-export const updateBuyerOrderStatus = (id, data) => request("patch", `order/buyer/update/${id}/`, data);
+export const getOrderList = () => request("get", "orders/buyer/list/");
+export const getOrderDetail = (id) => request("get", `orders/buyer/get/${id}/`);
+export const createOrder = (data) => request("post", "orders/buyer/create/", data);
+export const updateBuyerOrderStatus = (id, data) => request("patch", `orders/buyer/update/${id}/`, data);
 
 
-export const getSellerOrderList = () => request("get", `order/seller/list/`);
-export const getSellerOrderDetail = (id) => request("get", `order/seller/get/${id}/`);
-export const updateSellerOrderStatus = (id, data) => request("patch", `order/seller/update/${id}/`, data);
+export const getSellerOrderList = () => request("get", `orders/seller/list/`);
+export const getSellerOrderDetail = (id) => request("get", `orders/seller/get/${id}/`);
+export const updateSellerOrderStatus = (id, data) => request("patch", `orders/seller/update/${id}/`, data);
