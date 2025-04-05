@@ -4,42 +4,66 @@ from rest_framework import status
 from rest_framework.response import Response
 from products.models import Product
 from products.serializers import ProductSerializer
+from products.utils import clear_product_cache
 from commons.paginations import ProductPagination
 from accounts.models import CustomUser
+from django.core.cache import cache
 
 
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def get_product_list(request):
-    product_list = Product.objects.all().select_related("category")
-    paginator = ProductPagination()
-    queryset = paginator.paginate_queryset(queryset=product_list, request=request)
-    data = ProductSerializer(instance=queryset, many=True).data
+    page_number = request.query_params.get("page") or 1
+    CACHE_KEY = f"paginator_page_{page_number}"
 
-    return paginator.get_paginated_response(data)
+    paginated_data = cache.get(CACHE_KEY)
+
+    if not paginated_data:
+        product_list = Product.objects.all().select_related("category")
+        paginator = ProductPagination()
+        queryset = paginator.paginate_queryset(queryset=product_list, request=request)
+        data = ProductSerializer(instance=queryset, many=True).data
+        paginated_data = paginator.get_paginated_response(data).data
+        cache.set(CACHE_KEY, paginated_data, 60 * 10)
+
+    return Response(data=paginated_data, status=status.HTTP_200_OK)
 
 
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def get_product_detail(request, product_id):
-    product = Product.objects.filter(id=product_id).select_related("category").first()
+    CACHE_KEY = f"product_{product_id}"
+    product_data = cache.get(CACHE_KEY)
 
-    if not product:
-        return Response(
-            data="Нет такого продукта в базе данных", status=status.HTTP_404_NOT_FOUND
+    if not product_data:
+        product = (
+            Product.objects.filter(id=product_id).select_related("category").first()
         )
 
-    data = ProductSerializer(instance=product).data
-    return Response(data=data, status=status.HTTP_200_OK)
+        if not product:
+            return Response(
+                data="Нет такого продукта в базе данных",
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        product_data = ProductSerializer(instance=product).data
+        cache.set(CACHE_KEY, product_data, timeout=60 * 10)
+
+    return Response(data=product_data, status=status.HTTP_200_OK)
 
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def get_seller_product_list(request):
     seller_id = request.user.id
-    product = Product.objects.filter(seller_id=seller_id)
+    CACHE_KEY = f"product_list_seller_{seller_id}"
+    data = cache.get(CACHE_KEY)
 
-    data = ProductSerializer(instance=product, many=True).data
+    if not data:
+        product = Product.objects.filter(seller_id=seller_id).select_related("category")
+        data = ProductSerializer(instance=product, many=True).data
+        cache.set(CACHE_KEY, data, timeout=60 * 10)
+
     return Response(data=data, status=status.HTTP_200_OK)
 
 
@@ -48,7 +72,8 @@ def get_seller_product_list(request):
 def create_product(request):
     serializer = ProductSerializer(data=request.data)
     if serializer.is_valid():
-        seller = CustomUser.objects.filter(id=request.user.id).first()
+        seller_id = request.user.id
+        seller = CustomUser.objects.filter(id=seller_id).first()
 
         if not seller:
             return Response(
@@ -64,6 +89,7 @@ def create_product(request):
 
         validated_data = serializer.validated_data
         product = Product.objects.create(seller=seller, **validated_data)
+        clear_product_cache(seller_id=seller_id)
 
         data = ProductSerializer(instance=product).data
         return Response(data=data, status=status.HTTP_201_CREATED)
@@ -84,6 +110,7 @@ def update_product(request, product_id):
         Product.objects.filter(id=product_id, seller_id=seller_id).update(
             **validated_data
         )
+        clear_product_cache(seller_id=seller_id)
 
         product = Product.objects.filter(
             id=product_id, seller_id=seller_id, category_id=category_id
@@ -102,6 +129,7 @@ def delete_product(request, product_id):
     is_deleted, _ = Product.objects.filter(id=product_id, seller_id=seller_id).delete()
 
     if is_deleted:
+        clear_product_cache(seller_id=seller_id)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     return Response(status=status.HTTP_403_FORBIDDEN)
