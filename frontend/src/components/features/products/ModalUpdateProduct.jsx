@@ -27,7 +27,7 @@ const ModalUpdateProduct = ({ product, onClose }) => {
         const { name, value, type } = e.target;
         setFormData({
             ...formData,
-            [name]: name === "category" ? Number(value) || "" : type === "number" ? Number(value) || "" : value,
+            [name]: name === "category_id" ? Number(value) || "" : type === "number" ? Number(value) || "" : value,
         });
     };
 
@@ -51,13 +51,13 @@ const ModalUpdateProduct = ({ product, onClose }) => {
                 <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onClick={onClose}>✖</button>
                 <h2 className="text-2xl font-semibold text-center mb-4">Редактировать продукт</h2>
                 <form onSubmit={handleSubmit}>
-                    <FormInput label="Заголовок" name="title" value={formData.title} onChange={handleChange} type="text" />
+                    <FormInput label="Заголовок" name="name" value={formData.name} onChange={handleChange} type="text" />
                     <FormInput label="Описание" name="description" value={formData.description} onChange={handleChange} isTextArea />
                     <div className="w-full">
                         <label className="block text-gray-600">Категория</label>
                         <select
-                            name="category"
-                            value={formData.category}
+                            name="category_id"
+                            value={formData.category_id}
                             onChange={handleChange}
                             className="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500"
                         >
