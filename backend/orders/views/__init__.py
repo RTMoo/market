@@ -1,22 +1,21 @@
 from .buyer_view import (
-    BuyerOrderCreateView,
-    BuyerOrderListView,
-    BuyerOrderDetailView,
-    BuyerOrderStatusUpdateView,
+    buyer_order_create,
+    buyer_order_list,
+    buyer_order_detail,
+    buyer_order_status_update,
 )
 from .seller_view import (
-    SellerOrderStatusUpdateView,
-    SellerOrderListView,
-    SellerOrderDetailView,
+    seller_order_status_update,
+    seller_order_list,
+    seller_order_detail,
 )
 
-
 __all__ = [
-    BuyerOrderListView,
-    BuyerOrderCreateView,
-    BuyerOrderDetailView,
-    BuyerOrderStatusUpdateView,
-    SellerOrderStatusUpdateView,
-    SellerOrderListView,
-    SellerOrderDetailView,
+    buyer_order_list,
+    buyer_order_create,
+    buyer_order_detail,
+    buyer_order_status_update,
+    seller_order_status_update,
+    seller_order_list,
+    seller_order_detail,
 ]
