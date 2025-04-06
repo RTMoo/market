@@ -32,13 +32,13 @@ def seller_order_detail(request, order_id):
             {"detail": "Order not found"}, status=status.HTTP_404_NOT_FOUND
         )
 
+    # Фильтруем товары, оставляя только те, где seller_id = текущий продавец
     filtered_items = OrderItem.objects.filter(
         seller_id=seller_id, order=order
     ).select_related("product")
 
-    order.items = OrderItemSerializer(filtered_items, many=True).data
     order_data = OrderSerializer(order).data
-
+    order_data["items"] = OrderItemSerializer(filtered_items, many=True).data
 
     # Вычисляем общую стоимость
     total_price = sum(
