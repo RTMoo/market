@@ -11,14 +11,15 @@ from accounts.models import CustomUser
 from django.core.cache import cache
 from reviews.utils import clear_review_cache
 
+
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def get_product_reviews(request, product_id):
     """Получить список отзывов на конкретный товар"""
     cache_key = f"product_{product_id}_reviews"
-    
+
     data = cache.get(cache_key)
-    
+
     if not data:
         buyer_id = request.user.id if request.user.is_authenticated else None
         if buyer_id:
@@ -44,7 +45,7 @@ def get_product_reviews(request, product_id):
             "reviews": reviews_data,
             "buyerReview": buyer_review_data,
         }
-        
+
         cache.set(cache_key, data, 60 * 60)
 
     return Response(data=data, status=status.HTTP_200_OK)
@@ -131,7 +132,7 @@ def delete_review(request, review_id):
 
     if review.buyer_id != buyer_id:
         return Response(status=status.HTTP_403_FORBIDDEN)
-    
+
     product_id = review.product_id
     review.delete()
     clear_review_cache(product_id)
