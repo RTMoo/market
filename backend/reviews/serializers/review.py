@@ -3,14 +3,12 @@ from reviews.models import Review
 
 
 class ReviewSerializer(ModelSerializer):
-    product_id = IntegerField(write_only=True)
-
     class Meta:
         model = Review
         fields = [
             "id",
             "buyer",
-            "product_id",
+            "product",
             "comment",
             "rating",
             "created_at",
