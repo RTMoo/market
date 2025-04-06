@@ -17,7 +17,6 @@ from reviews.utils import clear_review_cache
 def get_product_reviews(request, product_id):
     """Получить список отзывов на конкретный товар"""
     cache_key = f"product_{product_id}_reviews"
-
     data = cache.get(cache_key)
 
     if not data:
@@ -110,7 +109,6 @@ def update_review(request, review_id):
         for field, value in serializer.validated_data.items():
             setattr(review, field, value)
         review.save()
-
         clear_review_cache(review.product_id)
 
         data = ReviewSerializer(review).data
