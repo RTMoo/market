@@ -7,18 +7,19 @@ from orders.models import Order, OrderItem
 from orders.utils import create_order
 from django.core.cache import cache
 
+
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def buyer_order_list(request):
     buyer_id = request.user.id
     cache_key = f"buyer_{buyer_id}_order_list"
-    
+
     order_data = cache.get(cache_key)
-    
+
     if not order_data:
         orders = Order.objects.filter(buyer=buyer_id).prefetch_related("items__product")
         order_data = OrderSerializer(orders, many=True).data
-        
+
         cache.set(cache_key, order_data, timeout=60 * 60)
 
     return Response(data=order_data, status=status.HTTP_200_OK)
@@ -31,7 +32,7 @@ def buyer_order_detail(request, order_id):
     cache_key = f"buyer_{buyer_id}_order_detail_{order_id}"
 
     order_data = cache.get(cache_key)
-    
+
     if not order_data:
         order = (
             Order.objects.filter(id=order_id, buyer=buyer_id)
@@ -39,10 +40,12 @@ def buyer_order_detail(request, order_id):
             .first()
         )
         if not order:
-            return Response({"detail": "Заказ не найден"}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Заказ не найден"}, status=status.HTTP_404_NOT_FOUND
+            )
 
         order_data = OrderSerializer(order).data
-        
+
         cache.set(cache_key, order_data, timeout=60 * 60)
 
     return Response(data=order_data, status=status.HTTP_200_OK)
@@ -59,10 +62,10 @@ def buyer_order_create(request):
         data = OrderSerializer(instance=order).data
         cache_key_buyer = f"buyer_{buyer_id}_order_list"
         cache_key_seller = f"seller_{order.seller_id}_order_list"
-        
+
         cache.delete(cache_key_buyer)
         cache.delete(cache_key_seller)
-        
+
         return Response(data=data, status=status.HTTP_201_CREATED)
 
     return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -108,10 +111,12 @@ def buyer_order_status_update(request, order_item_id):
 
         order_item.status = item_status
         order_item.save()
-        
+
         # Очищаем кэш для покупателя и продавца
         cache_key_buyer = f"buyer_{buyer_id}_order_detail_{order_item.order_id}"
-        cache_key_seller = f"seller_{order_item.seller_id}_order_detail_{order_item.order_id}"
+        cache_key_seller = (
+            f"seller_{order_item.seller_id}_order_detail_{order_item.order_id}"
+        )
 
         cache.delete(cache_key_buyer)
         cache.delete(cache_key_seller)

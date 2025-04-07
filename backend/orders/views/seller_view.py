@@ -66,7 +66,9 @@ def seller_order_detail(request, order_id):
 @api_view(["PATCH"])
 @permission_classes([IsAuthenticated])
 def seller_order_status_update(request, order_item_id):
-    order_item = OrderItem.objects.filter(id=order_item_id).select_related("order").first()
+    order_item = (
+        OrderItem.objects.filter(id=order_item_id).select_related("order").first()
+    )
     buyer_id = order_item.order.buyer_id
     seller_id = request.user.id
 
@@ -93,7 +95,7 @@ def seller_order_status_update(request, order_item_id):
     if item_status in (OrderItem.Status.CANCELED, OrderItem.Status.SHIPPED):
         order_item.status = item_status
         order_item.save()
-        
+
         cache_key_buyer = f"buyer_{buyer_id}_order_detail_{order_item.order_id}"
         cache_key_seller = f"seller_{seller_id}_order_detail_{order_item.order_id}"
 

@@ -2,17 +2,22 @@ import { useState } from 'react';
 import { updateCartItem, deleteCartItem } from "../../../api/cart";
 import { IoIosRemoveCircleOutline, IoIosAddCircleOutline, IoMdTrash } from "react-icons/io";
 import { FaRegHeart } from "react-icons/fa6";
-
+import { toast } from "react-toastify";
 
 
 const CartItemCard = ({ item, setCartItems }) => {
     const [quantity, setQuantity] = useState(item.quantity)
 
     const handleUpdateCart = async (quantity) => {
-        const response = await updateCartItem(item.id, quantity);
-        if (response.status === 200) {
-            setQuantity(quantity)
+        try {
+            const response = await updateCartItem(item.id, quantity);
+            if (response.status === 200) {
+                setQuantity(quantity)
+            }
+        } catch (error) {
+            toast.error(error.detail)
         }
+        
     }
 
     const handleDeleteCart = async () => {
