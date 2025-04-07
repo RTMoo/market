@@ -1,7 +1,7 @@
 import { request } from './request';
 
 
-export const getCart = () => request('get', 'carts/');
+export const getCart = () => request('get', 'carts/list/');
 export const clearCart = () => request('delete', `carts/clear/`);
 
 export const addCartItem = (product_id) => request('post', 'carts/add/', { product_id });
