@@ -2,28 +2,34 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.exceptions import ValidationError, PermissionDenied
-
 from carts.serializers import CartSerializer, CartItemSerializer
 from carts.models import Cart, CartItem
 from products.models import Product
+from django.core.cache import cache
+from carts.utils import delete_cart_cache
 
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def get_cart_list(request):
     user_id = request.user.id
+    cache_key = f"user_{user_id}_cart_list"
+    cart_data = cache.get(cache_key)
 
-    cart = (
-        Cart.objects.filter(user_id=user_id).prefetch_related("items__product").first()
-    )
-
-    if not cart:
-        return Response(
-            {"detail": "Корзина не найдена"}, status=status.HTTP_404_NOT_FOUND
+    if not cart_data:
+        cart = (
+            Cart.objects.filter(user_id=user_id)
+            .prefetch_related("items__product")
+            .first()
         )
 
-    cart_data = CartSerializer(instance=cart).data
+        if not cart:
+            return Response(
+                {"detail": "Корзина не найдена"}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        cart_data = CartSerializer(instance=cart).data
+        cache.set(cache_key, cart_data, timeout=60 * 60)
 
     return Response(data=cart_data, status=status.HTTP_200_OK)
 
@@ -31,7 +37,8 @@ def get_cart_list(request):
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def add_cart_item(request):
-    serializer = CartItemSerializer(data=request.data, context={"request": request})
+    serializer = CartItemSerializer(data=request.data)
+
     if not serializer.is_valid():
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -43,24 +50,35 @@ def add_cart_item(request):
     product = Product.objects.filter(id=product_id).select_related("seller").first()
 
     if not product:
-        raise ValidationError({"detail": "Продукт не найден"})
+        return Response(
+            {"detail": "Продукт не найден"}, status=status.HTTP_404_NOT_FOUND
+        )
 
     if product.seller_id == user_id:
-        raise PermissionDenied({"detail": "Нельзя добавить свои товары в корзину"})
+        return Response(
+            {"detail": "Нельзя добавить свои товары в корзину"},
+            status=status.HTTP_403_FORBIDDEN,
+        )
 
     if not cart:
-        raise ValidationError(
-            {"detail": "Корзина не найдена, возможно вы не авторизованы"}
+        return Response(
+            {"detail": "Корзина не найдена, возможно вы не авторизованы"},
+            status=status.HTTP_404_NOT_FOUND,
         )
 
     if CartItem.objects.filter(cart=cart, product=product).exists():
-        raise ValidationError({"detail": "У вас уже есть такой товар в корзине"})
+        return Response(
+            {"detail": "У вас уже есть такой товар в корзине"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
     cart_item = CartItem.objects.create(
         cart=cart, product=product, seller=product.seller, quantity=1
     )
 
     cart_data = CartItemSerializer(instance=cart_item).data
+
+    delete_cart_cache(user_id)
 
     return Response(data=cart_data, status=status.HTTP_201_CREATED)
 
@@ -103,6 +121,8 @@ def update_cart_item(request, cart_item_id):
     cart_item.quantity = quantity
     cart_item.save()
 
+    delete_cart_cache(user_id)
+
     return Response({"quantity": "Количество обновлено"}, status=status.HTTP_200_OK)
 
 
@@ -121,6 +141,8 @@ def delete_cart_item(request, cart_item_id):
             status=status.HTTP_404_NOT_FOUND,
         )
 
+    delete_cart_cache(user_id)
+
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
@@ -131,5 +153,7 @@ def clear_cart(request):
     cart = Cart.objects.filter(user_id=user_id).first()
     if cart:
         CartItem.objects.filter(cart=cart).delete()
+
+    delete_cart_cache(user_id)
 
     return Response(status=status.HTTP_204_NO_CONTENT)
