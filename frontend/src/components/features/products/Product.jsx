@@ -37,7 +37,7 @@ const Product = () => {
             ) : (
                 <>
                     {/* Сетка для карточек товаров */}
-                    <div className="grid gap-6 grid-cols-2 sm:grid-cols-3 md:grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
+                    <div className="grid gap-6 grid-cols-2 sm:grid-cols-3 md:grid-cols-[repeat(auto-fit,minmax(200px,300px))]">
                         {products.map((item) => (
                             <ProductCard key={item.id} item={item}/>
                         ))}

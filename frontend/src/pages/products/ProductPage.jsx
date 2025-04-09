@@ -75,7 +75,7 @@ const ProductPage = () => {
                 </div>
             </div>
             <div className="mb-5"></div>
-            <ProductReviews productId={product.id}/>
+            <ProductReviews productId={id}/>
         </section>
     );
 };
