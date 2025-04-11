@@ -4,29 +4,38 @@ from rest_framework import status
 from rest_framework.response import Response
 from products.models import Product
 from products.serializers import ProductSerializer
-from products.utils import clear_product_cache
+from products.utils import clear_product_cache, normalize_query_dict
+from products.filters import ProductFilter, ALLOWED_FILTER_FIELDS
 from commons.paginations import ProductPagination
 from accounts.models import CustomUser
 from django.core.cache import cache
 
 
+
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def get_product_list(request):
-    page_number = request.query_params.get("page") or 1
-    CACHE_KEY = f"paginator_page_{page_number}"
+    filter_query = normalize_query_dict(
+        request.query_params, allowed_fields=ALLOWED_FILTER_FIELDS
+    )
+    CACHE_KEY = f"paginator_{filter_query}"
 
     paginated_data = cache.get(CACHE_KEY)
 
     if not paginated_data:
-        product_list = Product.objects.all().select_related("category")
+        product_filter = ProductFilter(request.query_params, queryset=Product.objects.all().select_related("category"))
+        filtered_products = product_filter.qs
+
         paginator = ProductPagination()
-        queryset = paginator.paginate_queryset(queryset=product_list, request=request)
+        queryset = paginator.paginate_queryset(queryset=filtered_products, request=request)
+
         data = ProductSerializer(instance=queryset, many=True).data
         paginated_data = paginator.get_paginated_response(data).data
+
         cache.set(CACHE_KEY, paginated_data, 60 * 10)
 
     return Response(data=paginated_data, status=status.HTTP_200_OK)
+
 
 
 @api_view(["GET"])
