@@ -176,6 +176,7 @@ cython_debug/
 backend/*/migrations/*
 !backend/*/migrations/__init__.py
 
+uv.lock
 # Logs
 logs
 *.log
