@@ -8,7 +8,7 @@ from accounts.serializers import UserRegistrationSerializer
 from rest_framework_simplejwt.views import TokenRefreshView, TokenBlacklistView
 from accounts.utils import set_jwt_token
 from accounts.models import CustomUser
-
+from django.core.cache import cache
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     """
@@ -100,35 +100,42 @@ class CustomTokenBlacklistView(TokenBlacklistView):
 
 
 class UserRegistrationAPIView(APIView):
-    """
-    Представление для регистрации нового пользователя.
-
-    Позволяет любому пользователю (`AllowAny`) создать новый аккаунт,
-    отправив email и пароль. Возвращает данные нового пользователя
-    при успешной регистрации.
-
-    Attributes:
-        permission_classes (list): Разрешает доступ всем пользователям.
-        serializer_class (UserRegistrationSerializer): Сериализатор для регистрации.
-    """
-
     permission_classes = [AllowAny]
     serializer_class = UserRegistrationSerializer
 
     def post(self, request):
-        """
-        Обрабатывает POST-запрос для регистрации пользователя.
-
-        Args:
-            request (Request): Запрос с данными пользователя.
-
-        Returns:
-            Response: JSON-ответ с данными пользователя при успешной регистрации (201),
-            либо с ошибками валидации (400).
-        """
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserConfirmCode(APIView):
+    def post(self, request):
+        email = request.data.get("email")
+        code = request.data.get("code")
+
+        if not email or not code:
+            return Response({"detail": "email и code обязательны"}, status=status.HTTP_400_BAD_REQUEST)
+
+        real_code = cache.get(email)
+
+        if real_code is None:
+            return Response({"detail": "Код истёк или не запрашивался"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if code != real_code:
+            return Response({"detail": "Неверный код"}, status=status.HTTP_400_BAD_REQUEST)
+
+        user = CustomUser.objects.filter(email=email).first()
+        
+        if not user:
+            return Response({"detail": "Пользователь не найден"}, status=status.HTTP_404_NOT_FOUND)
+        
+        user.is_active = True
+        user.save()
+
+        cache.delete(email)
+        return Response(status=status.HTTP_200_OK)
+            

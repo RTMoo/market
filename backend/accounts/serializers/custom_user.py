@@ -4,10 +4,11 @@ from rest_framework.serializers import (
     CharField,
     ValidationError,
 )
-
 from accounts.models import CustomUser
+from accounts.tasks import send_confirmation_email
 from profiles.models import Profile
 from carts.models import Cart
+
 
 
 class UserRegistrationSerializer(ModelSerializer):
@@ -46,4 +47,5 @@ class UserRegistrationSerializer(ModelSerializer):
         Profile.objects.create(user=user)
         Cart.objects.create(user=user)
 
+        send_confirmation_email.delay(user.email)
         return user

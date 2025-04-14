@@ -4,6 +4,7 @@ from accounts.views import (
     UserRegistrationAPIView,
     CustomTokenRefreshView,
     CustomTokenBlacklistView,
+    UserConfirmCode
 )
 
 urlpatterns = [
@@ -11,4 +12,5 @@ urlpatterns = [
     path("login/", CustomTokenObtainPairView.as_view(), name="login"),
     path("refresh/", CustomTokenRefreshView.as_view(), name="token_refresh"),
     path("logout/", CustomTokenBlacklistView.as_view(), name="logout"),
+    path("confirm_code/", UserConfirmCode.as_view(), name="confirm_code")
 ]
