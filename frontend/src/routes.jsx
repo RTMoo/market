@@ -9,6 +9,7 @@ import ProductPage from './pages/products/ProductPage';
 import CartsPage from './pages/carts/CartsPage';
 import OrdersPage from './pages/orders/OrdersPage';
 import OrderDetails from './pages/orders/OrderDetails';
+import ConfirmCode from './pages/accounts/ConfirmCode';
 
 function AppRoutes() {
     return (
@@ -17,6 +18,7 @@ function AppRoutes() {
                 <Route path="/" element={<Home />} />
                 <Route path='/login' element={<LoginPage />} />
                 <Route path='/register' element={<RegisterPage />} />
+                <Route path='/confirm_code' element={<ConfirmCode />} />
                 <Route path='/profile' element={
                     <Layout>
                         <Profile />

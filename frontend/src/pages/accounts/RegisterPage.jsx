@@ -13,7 +13,8 @@ const RegisterPage = () => {
         try {
             const response = await register(email, password, password2);
             if (response.status === 201) {
-                navigate('/login');
+                localStorage.setItem("confirmEmail", email)
+                navigate('/confirm_code');
             };
         } catch (error) {
             console.log(error);
