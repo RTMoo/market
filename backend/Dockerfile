@@ -25,5 +25,3 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 # Копируем код проекта в рабочую директорию контейнера
 COPY backend /backend
 
-# Запуск Django-сервера через uv
-CMD ["uv", "run", "manage.py", "runserver", "0.0.0.0:8000"]

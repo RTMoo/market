@@ -15,6 +15,7 @@ class CustomUserManager(BaseUserManager):
         role = role or CustomUser.Role.BUYER
 
         extra_fields["role"] = role
+        extra_fields["is_active"] = False
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
