@@ -10,6 +10,7 @@ from accounts.utils import set_jwt_token
 from accounts.models import CustomUser
 from django.core.cache import cache
 
+
 class CustomTokenObtainPairView(TokenObtainPairView):
     """
     Хранение токена в HttpOnly
@@ -118,24 +119,33 @@ class UserConfirmCode(APIView):
         code = request.data.get("code")
 
         if not email or not code:
-            return Response({"detail": "email и code обязательны"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"detail": "email и code обязательны"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         real_code = cache.get(email)
 
         if real_code is None:
-            return Response({"detail": "Код истёк или не запрашивался"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"detail": "Код истёк или не запрашивался"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         if code != real_code:
-            return Response({"detail": "Неверный код"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"detail": "Неверный код"}, status=status.HTTP_400_BAD_REQUEST
+            )
 
         user = CustomUser.objects.filter(email=email).first()
-        
+
         if not user:
-            return Response({"detail": "Пользователь не найден"}, status=status.HTTP_404_NOT_FOUND)
-        
+            return Response(
+                {"detail": "Пользователь не найден"}, status=status.HTTP_404_NOT_FOUND
+            )
+
         user.is_active = True
         user.save()
 
         cache.delete(email)
         return Response(status=status.HTTP_200_OK)
-            

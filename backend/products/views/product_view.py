@@ -11,7 +11,6 @@ from accounts.models import CustomUser
 from django.core.cache import cache
 
 
-
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def get_product_list(request):
@@ -23,11 +22,16 @@ def get_product_list(request):
     paginated_data = cache.get(CACHE_KEY)
 
     if not paginated_data:
-        product_filter = ProductFilter(request.query_params, queryset=Product.objects.all().select_related("category"))
+        product_filter = ProductFilter(
+            request.query_params,
+            queryset=Product.objects.all().select_related("category"),
+        )
         filtered_products = product_filter.qs
 
         paginator = ProductPagination()
-        queryset = paginator.paginate_queryset(queryset=filtered_products, request=request)
+        queryset = paginator.paginate_queryset(
+            queryset=filtered_products, request=request
+        )
 
         data = ProductSerializer(instance=queryset, many=True).data
         paginated_data = paginator.get_paginated_response(data).data
@@ -35,7 +39,6 @@ def get_product_list(request):
         cache.set(CACHE_KEY, paginated_data, 60 * 10)
 
     return Response(data=paginated_data, status=status.HTTP_200_OK)
-
 
 
 @api_view(["GET"])

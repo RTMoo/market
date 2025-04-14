@@ -10,7 +10,6 @@ from profiles.models import Profile
 from carts.models import Cart
 
 
-
 class UserRegistrationSerializer(ModelSerializer):
     """
     Сериализатор для регистрации пользователя.
