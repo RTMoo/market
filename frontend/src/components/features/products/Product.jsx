@@ -3,16 +3,17 @@ import { getProducts } from "../../../api/product";
 import Paginator from "./Paginator";
 import ProductCard from "./ProductCard";
 import Filter from "./Filter";
+import { useProducts } from "../../contexts/ProductContext";
 
 const Product = () => {
-    const [products, setProducts] = useState([]);
+    const {products, setProducts} = useProducts();
     const [nextPage, setNextPage] = useState(null);
     const [prevPage, setPrevPage] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [count, setCount] = useState(0);
     const [loading, setLoading] = useState(false);
 
-    const pageSize = 24; // Укажи здесь реальный page_size с бэка
+    const pageSize = 24;
     const totalPages = Math.ceil(count / pageSize);
 
     const fetchProducts = async (page = 1) => {
@@ -43,7 +44,7 @@ const Product = () => {
                     <p>Загрузка товаров...</p>
                 ) : (
                     <>
-                        <div className="grid gap-6 grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+                        <div className="grid gap-6 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                             {products.map((item) => (
                                 <ProductCard key={item.id} item={item} />
                             ))}

@@ -2,6 +2,7 @@ import { createRoot } from 'react-dom/client'
 import AppRoutes from './routes';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { ProductsProvider } from './components/contexts/ProductContext';
 
 function App() {
     return (
@@ -13,5 +14,7 @@ function App() {
 }
 
 createRoot(document.getElementById('root')).render(
-    <App />
+    <ProductsProvider>
+        <App />
+    </ProductsProvider>
 )

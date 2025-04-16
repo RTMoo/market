@@ -8,18 +8,18 @@ const Filter = ({ setProducts }) => {
     const [categories, setCategories] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
 
-    useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                const response = await getCategories();
-                if (response.status === 200) {
-                    setCategories(response.data);
-                }
-            } catch (error) {
-                console.error("Ошибка при загрузке категорий", error);
+    const fetchCategories = async () => {
+        try {
+            const response = await getCategories();
+            if (response.status === 200) {
+                setCategories(response.data);
             }
-        };
+        } catch (error) {
+            console.error("Ошибка при загрузке категорий", error);
+        }
+    };
 
+    useEffect(() => {
         fetchCategories();
     }, []);
 
@@ -57,13 +57,13 @@ const Filter = ({ setProducts }) => {
                 <span>Фильтры</span>
             </div>
 
-            <div className="flex space-x-4">
+            <div className="flex flex-col gap-2">
                 <input
                     type="number"
                     value={priceMin}
                     onChange={(e) => setPriceMin(e.target.value)}
                     placeholder="Мин. цена"
-                    className="w-full border px-2 py-1 rounded"
+                    className="w-full border px-2 py-1 rounded block"
                     min={0}
                 />
                 <input
@@ -71,7 +71,7 @@ const Filter = ({ setProducts }) => {
                     value={priceMax}
                     onChange={(e) => setPriceMax(e.target.value)}
                     placeholder="Макс. цена"
-                    className="w-full border px-2 py-1 rounded"
+                    className="w-full border px-2 py-1 rounded block"
                     min={0}
                 />
             </div>
