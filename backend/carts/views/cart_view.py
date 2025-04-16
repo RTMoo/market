@@ -5,20 +5,19 @@ from rest_framework.permissions import IsAuthenticated
 from carts.serializers import CartSerializer, CartItemSerializer
 from carts.models import Cart, CartItem
 from products.models import Product
-from django.core.cache import cache
-from carts.utils import delete_cart_cache
+from carts.utils import delete_cart_cache, get_cart_cache, set_cart_cache
 
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def get_cart_list(request):
-    user_id = request.user.id
-    cache_key = f"user_{user_id}_cart_list"
-    cart_data = cache.get(cache_key)
+    buyer_id = request.user.id
+
+    cart_data = get_cart_cache(buyer_id=buyer_id)
 
     if not cart_data:
         cart = (
-            Cart.objects.filter(user_id=user_id)
+            Cart.objects.filter(buyer_id=buyer_id)
             .prefetch_related("items__product")
             .first()
         )
@@ -29,7 +28,7 @@ def get_cart_list(request):
             )
 
         cart_data = CartSerializer(instance=cart).data
-        cache.set(cache_key, cart_data, timeout=60 * 60)
+        set_cart_cache(buyer_id=buyer_id, data=cart_data)
 
     return Response(data=cart_data, status=status.HTTP_200_OK)
 
@@ -43,10 +42,10 @@ def add_cart_item(request):
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     validated_data = serializer.validated_data
-    user_id = request.user.id
+    buyer_id = request.user.id
     product_id = validated_data.pop("product_id")
 
-    cart = Cart.objects.filter(user_id=user_id).first()
+    cart = Cart.objects.filter(buyer_id=buyer_id).first()
     product = Product.objects.filter(id=product_id).select_related("seller").first()
 
     if not product:
@@ -54,7 +53,7 @@ def add_cart_item(request):
             {"detail": "Продукт не найден"}, status=status.HTTP_404_NOT_FOUND
         )
 
-    if product.seller_id == user_id:
+    if product.seller_id == buyer_id:
         return Response(
             {"detail": "Нельзя добавить свои товары в корзину"},
             status=status.HTTP_403_FORBIDDEN,
@@ -62,7 +61,7 @@ def add_cart_item(request):
 
     if not cart:
         return Response(
-            {"detail": "Корзина не найдена, возможно вы не авторизованы"},
+            {"detail": "Корзина не найдена"},
             status=status.HTTP_404_NOT_FOUND,
         )
 
@@ -78,7 +77,7 @@ def add_cart_item(request):
 
     cart_data = CartItemSerializer(instance=cart_item).data
 
-    delete_cart_cache(user_id)
+    delete_cart_cache(buyer_id=buyer_id)
 
     return Response(data=cart_data, status=status.HTTP_201_CREATED)
 
@@ -87,7 +86,7 @@ def add_cart_item(request):
 @permission_classes([IsAuthenticated])
 def update_cart_item(request, cart_item_id):
     quantity = request.data.get("quantity")
-    user_id = request.user.id
+    buyer_id = request.user.id
 
     if quantity is None:
         return Response(
@@ -102,7 +101,7 @@ def update_cart_item(request, cart_item_id):
 
     cart_item = (
         CartItem.objects.select_related("product")
-        .filter(id=cart_item_id, cart__user_id=user_id)
+        .filter(id=cart_item_id, cart__buyer_id=buyer_id)
         .first()
     )
 
@@ -121,18 +120,18 @@ def update_cart_item(request, cart_item_id):
     cart_item.quantity = quantity
     cart_item.save()
 
-    delete_cart_cache(user_id)
+    delete_cart_cache(buyer_id)
 
-    return Response({"quantity": "Количество обновлено"}, status=status.HTTP_200_OK)
+    return Response({"detail": "Количество обновлено"}, status=status.HTTP_200_OK)
 
 
 @api_view(["DELETE"])
 @permission_classes([IsAuthenticated])
 def delete_cart_item(request, cart_item_id):
-    user_id = request.user.id
+    buyer_id = request.user.id
 
     deleted_count, _ = CartItem.objects.filter(
-        id=cart_item_id, cart__user_id=user_id
+        id=cart_item_id, cart__buyer_id=buyer_id
     ).delete()
 
     if deleted_count == 0:
@@ -141,7 +140,7 @@ def delete_cart_item(request, cart_item_id):
             status=status.HTTP_404_NOT_FOUND,
         )
 
-    delete_cart_cache(user_id)
+    delete_cart_cache(buyer_id=buyer_id)
 
     return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -149,11 +148,11 @@ def delete_cart_item(request, cart_item_id):
 @api_view(["DELETE"])
 @permission_classes([IsAuthenticated])
 def clear_cart(request):
-    user_id = request.user.id
-    cart = Cart.objects.filter(user_id=user_id).first()
+    buyer_id = request.user.id
+    cart = Cart.objects.filter(buyer_id=buyer_id).first()
     if cart:
         CartItem.objects.filter(cart=cart).delete()
 
-    delete_cart_cache(user_id)
+    delete_cart_cache(buyer_id=buyer_id)
 
     return Response(status=status.HTTP_204_NO_CONTENT)
