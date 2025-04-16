@@ -1,6 +1,20 @@
 import { request } from './request'
 
-export const getProducts = (page = 1) => request('get', `catalogs/products/list/?page=${page}`)
+export const getProducts = (params = {}) => {
+    const query = new URLSearchParams();
+
+    for (const key in params) {
+        const value = params[key];
+        if (Array.isArray(value)) {
+            value.forEach(val => query.append(key, val));
+        } else if (value !== undefined && value !== '') {
+            query.append(key, value);
+        }
+    }
+
+    return request('get', `catalogs/products/list/?${query.toString()}`);
+};
+
 export const createProduct = (data) => request('post', 'catalogs/products/create/', data)
 export const getUserProducts = () => request('get', 'catalogs/products/seller-list/')
 export const getProductInfo = (id) => request('get', `catalogs/products/${id}/get/`)
