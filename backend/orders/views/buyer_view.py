@@ -60,11 +60,6 @@ def buyer_order_create(request):
     if serializer.is_valid():
         order = create_order(request, serializer.validated_data)
         data = OrderSerializer(instance=order).data
-        cache_key_buyer = f"buyer_{buyer_id}_order_list"
-        cache_key_seller = f"seller_{order.seller_id}_order_list"
-
-        cache.delete(cache_key_buyer)
-        cache.delete(cache_key_seller)
 
         return Response(data=data, status=status.HTTP_201_CREATED)
 

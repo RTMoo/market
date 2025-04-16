@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from carts.serializers import CartSerializer, CartItemSerializer
 from carts.models import Cart, CartItem
 from products.models import Product
-from carts.utils import delete_cart_cache, get_cart_cache, set_cart_cache
+from carts.utils import delete_buyer_cart_cache, get_buyer_cart_cache, set_buyer_cart_cache
 
 
 @api_view(["GET"])
@@ -13,7 +13,7 @@ from carts.utils import delete_cart_cache, get_cart_cache, set_cart_cache
 def get_cart_list(request):
     buyer_id = request.user.id
 
-    cart_data = get_cart_cache(buyer_id=buyer_id)
+    cart_data = get_buyer_cart_cache(buyer_id=buyer_id)
 
     if not cart_data:
         cart = (
@@ -28,7 +28,7 @@ def get_cart_list(request):
             )
 
         cart_data = CartSerializer(instance=cart).data
-        set_cart_cache(buyer_id=buyer_id, data=cart_data)
+        set_buyer_cart_cache(buyer_id=buyer_id, data=cart_data)
 
     return Response(data=cart_data, status=status.HTTP_200_OK)
 
@@ -77,7 +77,7 @@ def add_cart_item(request):
 
     cart_data = CartItemSerializer(instance=cart_item).data
 
-    delete_cart_cache(buyer_id=buyer_id)
+    delete_buyer_cart_cache(buyer_id=buyer_id)
 
     return Response(data=cart_data, status=status.HTTP_201_CREATED)
 
@@ -120,7 +120,7 @@ def update_cart_item(request, cart_item_id):
     cart_item.quantity = quantity
     cart_item.save()
 
-    delete_cart_cache(buyer_id)
+    delete_buyer_cart_cache(buyer_id)
 
     return Response({"detail": "Количество обновлено"}, status=status.HTTP_200_OK)
 
@@ -140,7 +140,7 @@ def delete_cart_item(request, cart_item_id):
             status=status.HTTP_404_NOT_FOUND,
         )
 
-    delete_cart_cache(buyer_id=buyer_id)
+    delete_buyer_cart_cache(buyer_id=buyer_id)
 
     return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -153,6 +153,6 @@ def clear_cart(request):
     if cart:
         CartItem.objects.filter(cart=cart).delete()
 
-    delete_cart_cache(buyer_id=buyer_id)
+    delete_buyer_cart_cache(buyer_id=buyer_id)
 
     return Response(status=status.HTTP_204_NO_CONTENT)
