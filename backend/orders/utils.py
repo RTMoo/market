@@ -74,5 +74,5 @@ def create_order(request, validated_data):
         # Очищаем кэш
         delete_all_seller_order_cache(order_items=order_items)
         delete_buyer_cart_cache(buyer_id=buyer_id)
-        
+
         return order

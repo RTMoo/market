@@ -54,7 +54,6 @@ def buyer_order_detail(request, order_id):
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def buyer_order_create(request):
-    buyer_id = request.user.id
     serializer = OrderSerializer(data=request.data)
 
     if serializer.is_valid():

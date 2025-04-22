@@ -6,9 +6,7 @@ from rest_framework.serializers import (
     SerializerMethodField,
 )
 
-from carts.models import CartItem, Cart
-from products.models import Product
-from rest_framework.exceptions import PermissionDenied, ValidationError
+from carts.models import CartItem
 
 
 class CartItemSerializer(ModelSerializer):
