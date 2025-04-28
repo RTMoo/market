@@ -14,16 +14,18 @@ from django.core.cache import cache
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def get_product_list(request):
-    filter_query = normalize_query_dict(
+    filter_query, encoded_query_hash = normalize_query_dict(
         request.query_params, allowed_fields=ALLOWED_FILTER_FIELDS
     )
-    CACHE_KEY = f"paginator_{filter_query}"
+
+    page = request.query_params.get("page", 1)
+    CACHE_KEY = f"paginator_{encoded_query_hash}_page_{page}"
 
     paginated_data = cache.get(CACHE_KEY)
 
     if not paginated_data:
         product_filter = ProductFilter(
-            request.query_params,
+            filter_query,
             queryset=Product.objects.all().select_related("category"),
         )
         filtered_products = product_filter.qs
@@ -39,6 +41,7 @@ def get_product_list(request):
         cache.set(CACHE_KEY, paginated_data, 60 * 10)
 
     return Response(data=paginated_data, status=status.HTTP_200_OK)
+
 
 
 @api_view(["GET"])

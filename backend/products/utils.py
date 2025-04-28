@@ -1,7 +1,6 @@
 from django.core.cache import cache
 from urllib.parse import urlencode
 
-
 def clear_product_cache(seller_id: int):
     # Удалить весь кэш из пагинаторов
     cache.delete_pattern("paginator_page_*")
@@ -12,8 +11,7 @@ def clear_product_cache(seller_id: int):
 
 def normalize_query_dict(query_dict, allowed_fields=None):
     """
-    Фильтрует, сортирует и возвращает стабильную строку для кэш-ключа.
-    Поддерживает множественные значения.
+    Возвращает отфильтрованный и отсортированный словарь и строку для кэша.
     """
     if allowed_fields is not None:
         allowed_fields = set(f.lower() for f in allowed_fields)
@@ -23,8 +21,10 @@ def normalize_query_dict(query_dict, allowed_fields=None):
     for key in query_dict.keys():
         if allowed_fields is None or key.lower() in allowed_fields:
             values = query_dict.getlist(key)
-            filtered[key] = sorted(values)  # сортировка значений, если их несколько
+            filtered[key] = sorted(values)
 
-    # сортировка ключей и построение строки
-    sorted_items = sorted(filtered.items())
-    return urlencode(sorted_items, doseq=True)
+    # строка для кэша
+    encoded_query_hash = urlencode(sorted(filtered.items()), doseq=True)
+
+    return filtered, encoded_query_hash
+
