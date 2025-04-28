@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { getCategories } from '../../../api/product';
 import { IoFilterSharp } from "react-icons/io5";
-import { getCategories, getProducts } from '../../../api/product';
 
-const Filter = ({ setProducts }) => {
+const Filter = ({ onFilterChange }) => {
     const [priceMin, setPriceMin] = useState('');
     const [priceMax, setPriceMax] = useState('');
     const [categories, setCategories] = useState([]);
@@ -32,22 +32,18 @@ const Filter = ({ setProducts }) => {
         );
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        const query = {
+
+        // Создаем объект фильтров
+        const filters = {
             price_min: priceMin || undefined,
             price_max: priceMax || undefined,
             category: selectedCategories.length ? selectedCategories : undefined
         };
 
-        try {
-            const response = await getProducts(query);
-            if (response.status === 200) {
-                setProducts(response.data.results);
-            }
-        } catch (error) {
-            console.error("Ошибка при загрузке товаров", error);
-        }
+        // Передаем фильтры в родительский компонент
+        onFilterChange(filters);
     };
 
     return (

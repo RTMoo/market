@@ -1,16 +1,28 @@
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+
 const Paginator = ({ next, previous, current, total, onPageChange }) => {
     const getPages = () => {
         const pages = [];
-        for (let i = 1; i <= total; i++) {
+        let start = Math.max(1, current - 2);
+        let end = Math.min(total, start + 4);
+
+        // Подправляем start, если мы в конце списка
+        if (end - start < 4) {
+            start = Math.max(1, end - 4);
+        }
+
+        for (let i = start; i <= end; i++) {
             pages.push(i);
         }
+
         return pages;
     };
 
     return (
         <div className="flex items-center space-x-2">
             <button
-                onClick={() => onPageChange(previous)}
+                onClick={() => onPageChange(current - 1)}
                 disabled={!previous}
                 className="px-3 py-1 border rounded disabled:opacity-50"
             >
@@ -30,7 +42,7 @@ const Paginator = ({ next, previous, current, total, onPageChange }) => {
             ))}
 
             <button
-                onClick={() => onPageChange(next)}
+                onClick={() => onPageChange(current + 1)}
                 disabled={!next}
                 className="px-3 py-1 border rounded disabled:opacity-50"
             >
