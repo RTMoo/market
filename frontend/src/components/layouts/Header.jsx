@@ -31,7 +31,7 @@ const Header = ({ toggleSidebar }) => {
     }, []);
 
     return (
-        <header className="sticky top-0 left-0 w-full h-20 px-6 z-50 bg-gradient-to-r from-blue-600 to-blue-400 text-white shadow-md backdrop-blur-md bg-opacity-90">
+        <header className="sticky top-0 left-0 w-full h-20 px-6 z-50 bg-sky-500 text-white shadow-md">
             <div className="flex justify-between items-center h-full">
                 <div className="flex flex-row items-center">
                     <button className="p-2 rounded-md hover:bg-blue-600 transition" onClick={toggleSidebar}>

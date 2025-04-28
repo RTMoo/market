@@ -30,7 +30,14 @@ const CartsPage = () => {
                 <div className="sm:col-span-1 md:col-span-2 space-y-4">
                     <CartItemList cartItems={cartItems} setCartItems={setCartItems} />
                 </div>
-                <CreateOrderForm totalPrice={totalPrice}/>
+                {
+                    cartItems.length === 0 ?
+                        (
+                            <p className="text-2xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-gray-400">Корзина пуста</p>
+                        ) : (
+                            <CreateOrderForm totalPrice={totalPrice} />
+                        )
+                }
             </div>
         </div>
     );

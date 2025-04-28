@@ -1,72 +1,91 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'
+import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { register } from '../../api/auth';
 
 const RegisterPage = () => {
-    const navigate = useNavigate()
-    let [email, setEmail] = useState('')
-    let [password, setPassword] = useState('')
-    let [password2, setPassword2] = useState('')
+  const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
 
-    const handleRegister = async (e) => {
-        e.preventDefault();
-        try {
-            const response = await register(email, password, password2);
-            if (response.status === 201) {
-                localStorage.setItem("confirmEmail", email)
-                navigate('/confirm_code');
-            };
-        } catch (error) {
-            console.log(error);
-        }
-    };
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    if (password !== confirm) {
+      console.log('Пароли не совпадают');
+      return;
+    }
 
-    return (
-        <div className="w-full min-h-screen flex items-center justify-center bg-gray-100">
-            <form className="bg-white p-8 rounded-2xl shadow-md w-96 space-y-4">
-                <h2 className="text-xl font-bold text-center">Регистрация</h2>
+    try {
+      const response = await register(email, password);
 
-                <div>
-                    <label htmlFor="email" className="block text-gray-600 text-sm font-medium">Email</label>
-                    <input
-                        type="text"
-                        id="email"
-                        className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-                </div>
+      if (response.status === 200) {
+        localStorage.setItem('isAuth', 'true');
+        navigate('/');
+      } else {
+        console.log('Ошибка регистрации: неверный статус ответа');
+      }
+    } catch (error) {
+      console.log('Ошибка регистрации:', error);
+    }
+  };
 
-                <div>
-                    <label htmlFor="password" className="block text-gray-600 text-sm font-medium">Пароль</label>
-                    <input
-                        type="password"
-                        id="password"
-                        className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </div>
+  return (
+    <div className="w-full min-h-screen flex items-center justify-center bg-gradient-to-br from-green-100 to-blue-200">
+      <form
+        onSubmit={handleRegister}
+        className="bg-white p-8 rounded-2xl shadow-lg w-96 space-y-5"
+      >
+        <h2 className="text-2xl font-bold text-center text-gray-800">Регистрация</h2>
 
-                <div>
-                    <label htmlFor="password2" className="block text-gray-600 text-sm font-medium">Повторите пароль</label>
-                    <input
-                        type="password"
-                        id="password2"
-                        className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
-                        onChange={(e) => setPassword2(e.target.value)}
-                    />
-                </div>
-
-                <button
-                    type="submit"
-                    className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-200"
-                    onClick={handleRegister}
-                >
-                    Регистрация
-                </button>
-            </form>
+        <div>
+          <label className="block text-gray-600 text-sm mb-1">Email</label>
+          <input
+            type="email"
+            className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
         </div>
 
-    );
-}
+        <div>
+          <label className="block text-gray-600 text-sm mb-1">Пароль</label>
+          <input
+            type="password"
+            className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block text-gray-600 text-sm mb-1">Повтор пароля</label>
+          <input
+            type="password"
+            className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+            value={confirm}
+            onChange={(e) => setConfirm(e.target.value)}
+            required
+          />
+        </div>
+
+        <button
+          type="submit"
+          className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-xl transition"
+        >
+          Зарегистрироваться
+        </button>
+
+        <p className="text-sm text-center text-gray-600">
+          Уже есть аккаунт?{' '}
+          <Link to="/login" className="text-blue-600 hover:underline">
+            Войти
+          </Link>
+        </p>
+      </form>
+    </div>
+  );
+};
 
 export default RegisterPage;
