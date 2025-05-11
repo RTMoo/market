@@ -1,3 +1,6 @@
+networks:
+  dev:
+
 services:
   backend:
     build:
@@ -17,6 +20,8 @@ services:
     depends_on:
       - redis
     command: ["uv", "run", "manage.py", "runserver", "0.0.0.0:8000"]
+    networks:
+      - dev
 
   celery:
     build:
@@ -35,14 +40,16 @@ services:
     depends_on:
       - backend
       - redis
-
+    networks:
+      - dev
   redis:
     image: redis:alpine
     ports:
       - "6379:6379"
     volumes:
       - redis_data:/data
-
+    networks:
+      - dev
   frontend:
     build:
       context: ./frontend
@@ -52,6 +59,7 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
-
+    networks:
+      - dev
 volumes:
   redis_data:
