@@ -60,16 +60,23 @@ const Product = () => {
 
     // Обработчик изменения фильтров
     const handleFilterChange = (newFilters) => {
+        // Очищаем newFilters от значений undefined, null, или пустых строк
+        const cleanedFilters = Object.keys(newFilters).reduce((acc, key) => {
+            const value = newFilters[key];
+            // Добавляем в новый объект только те фильтры, которые имеют значение
+            if (value !== undefined && value !== null && value !== "") {
+                acc[key] = value;
+            }
+            return acc;
+        }, {});
+    
+        // Сбрасываем страницу на 1
         const queryParams = new URLSearchParams(location.search);
-        queryParams.set("page", 1);  // сбрасываем страницу на 1
+        queryParams.set("page", 1);
     
         // Обновляем фильтры в URL, только если они имеют значение
-        Object.keys(newFilters).forEach((key) => {
-            if (newFilters[key] !== undefined && newFilters[key] !== null && newFilters[key] !== "") {
-                queryParams.set(key, newFilters[key]);
-            } else {
-                queryParams.delete(key);  // удаляем фильтры, если они не заданы
-            }
+        Object.keys(cleanedFilters).forEach((key) => {
+            queryParams.set(key, cleanedFilters[key]);
         });
     
         // Навигация с обновленными фильтрами и сброшенной страницей
@@ -79,8 +86,9 @@ const Product = () => {
         });
     
         // Перезапрос товаров с новыми фильтрами
-        fetchProducts(1, newFilters);
+        fetchProducts(1, cleanedFilters);  // запрос с очищенными фильтрами
     };
+    
     
 
     useEffect(() => {
