@@ -13,6 +13,6 @@ COPY ../pyproject.toml ../uv.lock /backend/
 
 RUN --mount=type=cache,target=/root/.cache/uv \
     --mount=type=bind,source=../pyproject.toml,target=/backend/pyproject.toml \
-    uv sync --frozen --no-dev
+    uv sync --no-dev
 
 COPY backend /backend
