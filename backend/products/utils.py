@@ -1,6 +1,7 @@
 from django.core.cache import cache
 from urllib.parse import urlencode
 
+
 def clear_product_cache(seller_id: int):
     # Удалить весь кэш из пагинаторов
     cache.delete_pattern("paginator*")
@@ -27,4 +28,3 @@ def normalize_query_dict(query_dict, allowed_fields=None):
     encoded_query_hash = urlencode(sorted(filtered.items()), doseq=True)
 
     return filtered, encoded_query_hash
-

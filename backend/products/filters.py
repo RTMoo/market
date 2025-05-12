@@ -3,6 +3,7 @@ from products.models import Product, Category
 
 ALLOWED_FILTER_FIELDS = ["price_min", "price_max", "category"]
 
+
 class ProductFilter(django_filters.FilterSet):
     price_min = django_filters.NumberFilter(
         field_name="price", lookup_expr="gte", required=False
@@ -20,9 +21,9 @@ class ProductFilter(django_filters.FilterSet):
 
     def filter_queryset(self, queryset):
         # Получаем параметры фильтрации
-        price_min = self.data.get('price_min')
-        price_max = self.data.get('price_max')
-        category = self.data.get('category')
+        price_min = self.data.get("price_min")
+        price_max = self.data.get("price_max")
+        category = self.data.get("category")
         # Преобразуем строки в числа, если они есть
         if price_min:
             try:
@@ -39,7 +40,9 @@ class ProductFilter(django_filters.FilterSet):
         # Преобразуем строку категорий в список чисел, если они есть
         if category:
             try:
-                category = [int(cat) for cat in category[0].split(',')]  # split и преобразуем в список чисел
+                category = [
+                    int(cat) for cat in category[0].split(",")
+                ]  # split и преобразуем в список чисел
             except ValueError:
                 category = []
         # Фильтрация на основе преобразованных значений

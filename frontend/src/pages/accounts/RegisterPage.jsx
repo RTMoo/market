@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { register } from '../../api/auth';
+import { toast } from "react-toastify";
+
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -16,13 +18,17 @@ const RegisterPage = () => {
     }
 
     try {
-      const response = await register(email, password);
-
-      if (response.status === 200) {
-        localStorage.setItem('isAuth', 'true');
-        navigate('/');
+      if (password !== confirm) {
+        toast.error("Пароли не совпадают")
       } else {
-        console.log('Ошибка регистрации: неверный статус ответа');
+        const response = await register(email, password);
+        if (response.status === 201) {
+          localStorage.setItem("confirmEmail", email)
+          navigate('/confirm_code');
+        } else {
+          console.log('Ошибка регистрации: неверный статус ответа 123');
+        }
+
       }
     } catch (error) {
       console.log('Ошибка регистрации:', error);

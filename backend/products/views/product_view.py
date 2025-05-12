@@ -43,7 +43,6 @@ def get_product_list(request):
     return Response(data=paginated_data, status=status.HTTP_200_OK)
 
 
-
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def get_product_detail(request, product_id):

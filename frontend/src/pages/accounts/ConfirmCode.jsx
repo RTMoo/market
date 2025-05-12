@@ -4,7 +4,6 @@ import { confirmCode } from '../../api/auth';
 
 const ConfirmCode = () => {
     const navigate = useNavigate();
-    const email = localStorage.getItem("confirmEmail");
     const [code, setCode] = useState(['', '', '', '', '', '']);
 
     const handleChange = (e, index) => {
@@ -49,10 +48,12 @@ const ConfirmCode = () => {
     };
 
     const handleSubmit = async () => {
+        const email = localStorage.getItem("confirmEmail");
         const data = { code: code.join(''), email: email };
         try {
             const response = await confirmCode(data);
             if (response.status === 200) {
+                localStorage.setItem('isAuth', 'true');
                 navigate("/login");
             }
         } catch (error) {
