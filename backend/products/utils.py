@@ -3,7 +3,7 @@ from urllib.parse import urlencode
 
 def clear_product_cache(seller_id: int):
     # Удалить весь кэш из пагинаторов
-    cache.delete_pattern("paginator_page_*")
+    cache.delete_pattern("paginator*")
 
     # Удалить кэш списка продуктов текущего продавца
     cache.delete(f"product_list_seller_{seller_id}")
